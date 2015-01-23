@@ -70,12 +70,12 @@ public class StructGC {
 	}
 
 	public static void configureGarbageCollector(//
-			long minIntervalMillis, //
-			long maxIntervalMillis, //
-			float incIntervalFactor, //
-			long maxDurationMicros,//
-			int heapSize,//
-			int maxEmptyHeaps//
+	   long minIntervalMillis, //
+	   long maxIntervalMillis, //
+	   float incIntervalFactor, //
+	   long maxDurationMicros,//
+	   int heapSize,//
+	   int maxEmptyHeaps//
 	) {
 		if (minIntervalMillis < 0)
 			throw new IllegalArgumentException();
@@ -120,7 +120,7 @@ public class StructGC {
 		}
 	}
 
-	private static long mallocImpl(long stride, int count) {
+	private static int mallocImpl(long stride, int count) {
 		if (StructEnv.SAFETY_FIRST)
 			if (stride <= 0)
 				throw new IllegalArgumentException();
@@ -128,14 +128,14 @@ public class StructGC {
 			if (count <= 0)
 				throw new IllegalArgumentException();
 
-		long handle;
+		int handle;
 
 		if (stride * count > gc_heap_size) {
 			LargeMalloc largeMalloc = new LargeMalloc(stride, count);
 			synchronized (large_mallocs) {
 				large_mallocs.add(largeMalloc);
 			}
-			handle = largeMalloc.addr;
+			handle = StructMemory.pointer2handle(largeMalloc.addr);
 		} else {
 			handle = local_heaps.get().malloc((int) stride, count);
 			if (handle == 0) {
@@ -147,47 +147,74 @@ public class StructGC {
 			}
 		}
 
+		if (StructEnv.SAFETY_FIRST) {
+			testMemoryAccess(handle, stride, count);
+		}
+
 		return handle;
 	}
 
-	public static long malloc(int sizeof) {
+	private static long testMemoryAccess(int handle, long stride, int count) {
+		if (true)
+			return 0L;
+		
+		long base = StructMemory.handle2pointer(handle);
+		long sizeof = stride * count;
+
+		if (handle != StructMemory.pointer2handle(base))
+			throw new IllegalStateException();
+
+		System.out.println("memtest.init: " + base + ", sizeof=" + sizeof);
+		int sum = 0;
+		for (long offset = 0; offset < sizeof; offset++)
+			sum ^= StructUnsafe.UNSAFE.getByte(base + offset);
+		for (long offset = 0; offset < sizeof; offset += 4)
+			sum ^= StructUnsafe.UNSAFE.getInt(base + offset);
+
+		long lastValidAddress = base + stride * count - 1;
+		sum ^= StructUnsafe.UNSAFE.getByte(lastValidAddress);
+		System.out.println("memtest.init.sum=" + sum);
+		return lastValidAddress;
+	}
+
+	public static int malloc(int sizeof) {
 		return mallocImpl(sizeof, 1);
 	}
 
-	public static long calloc(int sizeof) {
-		long handle = malloc(sizeof);
+	public static int calloc(int sizeof) {
+		int handle = malloc(sizeof);
 		StructMemory.clearMemory(handle, sizeof);
 		return handle;
 	}
 
-	public static long[] mallocArray(int sizeof, int length) {
-		long pointer = mallocImpl(sizeof, length);
-		return StructMemory.createPointerArray(pointer, sizeof, length);
+	public static int[] mallocArray(int sizeof, int length) {
+		long pointer = StructMemory.handle2pointer(mallocImpl(sizeof, length));
+		return StructMemory.pointer2handles(pointer, sizeof, length);
 	}
 
-	public static long[] callocArray(int sizeof, int length) {
-		long[] handles = mallocArray(sizeof, length);
+	public static int[] callocArray(int sizeof, int length) {
+		int[] handles = mallocArray(sizeof, length);
 		StructMemory.clearMemory(handles[0], (long) sizeof * length);
 		return handles;
 	}
 
-	public static long mallocArrayBase(int sizeof, int length) {
+	public static int mallocArrayBase(int sizeof, int length) {
 		return mallocImpl((long) sizeof * length, 1);
 	}
 
-	public static long callocArrayBase(int sizeof, int length) {
-		long baseHandle = mallocArrayBase(sizeof, length);
+	public static int callocArrayBase(int sizeof, int length) {
+		int baseHandle = mallocArrayBase(sizeof, length);
 		StructMemory.clearMemory(baseHandle, (long) sizeof * length);
 		return baseHandle;
 	}
 
-	public static long[] reallocArray(int sizeof, long[] src, int newLength) {
+	public static int[] reallocArray(int sizeof, int[] src, int newLength) {
 		if (StructEnv.SAFETY_FIRST)
 			for (int i = 0; i < src.length; i++)
 				if (src[i] == 0x00)
 					throw new NullPointerException("index=" + i);
 
-		long[] dst = mallocArray(sizeof, newLength);
+		int[] dst = mallocArray(sizeof, newLength);
 		int min = Math.min(src.length, newLength);
 		for (int i = 0; i < min; i++)
 			StructMemory.copy(sizeof, src[i], dst[i]);
@@ -201,7 +228,7 @@ public class StructGC {
 		public final long addr;
 		public final long sizeof;
 		public int unfreedHandles;
-		private LongList activeHandles;
+		private IntList activeHandles;
 
 		public LargeMalloc(long stride, int count) {
 			if (StructEnv.SAFETY_FIRST) {
@@ -212,23 +239,20 @@ public class StructGC {
 			}
 
 			this.sizeof = stride * count;
-			try {
-				this.base = StructUnsafe.UNSAFE.allocateMemory(sizeof + 4L);
-			} catch (OutOfMemoryError err) {
-				throw new OutOfMemoryError("failed to allocate " + sizeof + " bytes");
-			}
+			this.base = StructUnsafe.UNSAFE.allocateMemory(sizeof + 4L);
 			this.addr = StructMemory.alignAddressToWord(base);
 			this.unfreedHandles = count;
 
 			if (StructEnv.SAFETY_FIRST) {
-				activeHandles = new LongList();
+				activeHandles = new IntList();
 
 				if (count == 1) {
-					if (activeHandles.contains(addr))
+					int handle = StructMemory.pointer2handle(addr);
+					if (activeHandles.contains(handle))
 						throw new IllegalStateException();
-					activeHandles.add(addr);
+					activeHandles.add(handle);
 				} else {
-					for (long handle : StructMemory.createPointerArray(addr, (int) stride, count)) {
+					for (int handle : StructMemory.pointer2handles(addr, (int) stride, count)) {
 						if (activeHandles.contains(handle))
 							throw new IllegalStateException();
 						activeHandles.add(handle);
@@ -237,14 +261,16 @@ public class StructGC {
 			}
 		}
 
-		public boolean freeHandle(long pntr) {
+		public boolean freeHandle(int handle) {
+			long pntr = StructMemory.handle2pointer(handle);
 			if (pntr >= addr && pntr < addr + sizeof) {
 				if (StructEnv.SAFETY_FIRST && unfreedHandles <= 0)
 					throw new IllegalStateException();
 				if (StructEnv.SAFETY_FIRST)
-					if (!activeHandles.removeValue(pntr))
+					if (!activeHandles.removeValue(handle))
 						throw new IllegalStateException();
 				if (--unfreedHandles == 0) {
+					System.out.println("free-base: " + base);
 					StructUnsafe.UNSAFE.freeMemory(base);
 				}
 				return true;
@@ -255,7 +281,7 @@ public class StructGC {
 
 	private static List<LargeMalloc> large_mallocs = new ArrayList<>();
 
-	public static void freeHandle(long handle) {
+	public static void freeHandle(int handle) {
 		StructHeap localHeap = local_heaps.get();
 		boolean freedFromLocalHeap = localHeap.freeHandle(handle);
 
@@ -268,7 +294,7 @@ public class StructGC {
 		}
 	}
 
-	public static void freeHandles(long[] handles) {
+	public static void freeHandles(int[] handles) {
 
 		StructHeap localHeap = local_heaps.get();
 
@@ -325,6 +351,7 @@ public class StructGC {
 	}
 
 	private static class MemoryRegionSet {
+		private static boolean triple_check = false;
 		private final List<MemoryRegion> regions;
 
 		public MemoryRegionSet() {
@@ -336,21 +363,21 @@ public class StructGC {
 		}
 
 		public void add(MemoryRegion region) {
-			int io = this.binarySearch(region.base);
+			int io = this.binarySearch(region.minWord);
 			if (io >= 0)
 				throw new IllegalStateException();
 			regions.add(-(io + 1), region);
 
-			if (StructEnv.SAFETY_FIRST) {
+			if (triple_check) {
 				for (int i = 1; i < regions.size(); i++)
-					if (regions.get(i - 1).base >= regions.get(i - 0).base)
+					if (regions.get(i - 1).minWord >= regions.get(i - 0).minWord)
 						throw new IllegalStateException();
 			}
 		}
 
-		public MemoryRegion search(long handle) {
+		public MemoryRegion search(int handle) {
 			MemoryRegion found = null;
-			if (StructEnv.SAFETY_FIRST) {
+			if (triple_check) {
 				for (MemoryRegion region : regions)
 					if (region.isInRegion(handle))
 						found = region;
@@ -358,7 +385,7 @@ public class StructGC {
 
 			int io = this.binarySearch(handle);
 			if (io < 0)
-				if (StructEnv.SAFETY_FIRST && found != null)
+				if (triple_check && found != null)
 					throw new IllegalStateException();
 				else
 					return null;
@@ -366,12 +393,12 @@ public class StructGC {
 			MemoryRegion region = regions.get(io);
 			if (!region.isInRegion(handle))
 				throw new IllegalStateException();
-			if (StructEnv.SAFETY_FIRST && found != region)
+			if (triple_check && found != region)
 				throw new IllegalStateException();
 			return region;
 		}
 
-		private int binarySearch(long handle) {
+		private int binarySearch(int handle) {
 			List<MemoryRegion> list = regions;
 
 			int lo = 0;
@@ -381,9 +408,9 @@ public class StructGC {
 				int midIdx = (lo + hi) >>> 1;
 				MemoryRegion mid = list.get(midIdx);
 
-				if (handle < mid.base)
+				if (handle < mid.minWord)
 					hi = midIdx - 1;
-				else if (handle >= mid.base + mid.sizeof)
+				else if (handle >= mid.minWord + mid.wordCount)
 					lo = midIdx + 1;
 				else
 					return midIdx;
@@ -394,7 +421,7 @@ public class StructGC {
 
 	private static class Memory {
 		private static final AtomicInteger in_use_heap_count = new AtomicInteger();
-		private static final LongStack sync_frees = new LongStack();
+		private static final IntStack sync_frees = new IntStack();
 		private static final List<StructHeap> sync_heaps = new ArrayList<>();
 		private static final MemoryRegionSet sync_region_set = new MemoryRegionSet();
 		private static final MemoryRegionSet gc_region_set = new MemoryRegionSet();
@@ -447,14 +474,15 @@ public class StructGC {
 
 				MemoryRegion region = getRegionFor(heap);
 				if (region == null) {
-					long base = calcRegionBaseForHeap(heap);
-					sync_region_set.add(new MemoryRegion(base, gc_region_size));
+					int minWord = calcRegionMinWordForHeap(heap);
+					int wordCount = StructMemory.bytes2words(gc_region_size);
+					sync_region_set.add(new MemoryRegion(minWord, wordCount));
 				}
 				return heap;
 			}
 		}
 
-		public static MemoryRegion getRegionFor(long handle) {
+		public static MemoryRegion getRegionFor(int handle) {
 			MemoryRegion region;
 
 			region = gc_region_set.search(handle);
@@ -525,7 +553,7 @@ public class StructGC {
 
 				//
 				outer: while (!Memory.sync_frees.isEmpty()) {
-					long handle = Memory.sync_frees.pop();
+					int handle = Memory.sync_frees.pop();
 
 					for (LargeMalloc largeMalloc : large_mallocs) {
 						if (largeMalloc.freeHandle(handle)) {
@@ -567,34 +595,33 @@ public class StructGC {
 		}
 	}
 
-	public static long calcRegionBaseForHeap(StructHeap heap) {
+	public static int calcRegionMinWordForHeap(StructHeap heap) {
 		long addr = StructUnsafe.getBufferBaseAddress(heap.buffer);
-		return addr / gc_region_size * gc_region_size;
+		return StructMemory.bytes2words(addr / gc_region_size * gc_region_size);
 	}
 
 	private static class MemoryRegion {
-		private final long base;
-		private final int sizeof;
+		private final int minWord, wordCount;
 
-		public MemoryRegion(long base, int sizeof) {
-			if (base % gc_region_size != 0)
+		public MemoryRegion(int minWord, int wordCount) {
+			if (minWord % (StructMemory.bytes2words(gc_region_size)) != 0)
 				throw new IllegalStateException();
-			if (sizeof != gc_region_size)
+			if (wordCount != StructMemory.bytes2words(gc_region_size))
 				throw new IllegalStateException();
-			this.base = base;
-			this.sizeof = sizeof;
+			this.minWord = minWord;
+			this.wordCount = wordCount;
 		}
 
 		final List<StructHeap> gcHeaps = new ArrayList<>();
-		final LongStack toFree = new LongStack();
-		final LongStack failed = new LongStack();
+		final IntStack toFree = new IntStack();
+		final IntStack failed = new IntStack();
 
-		public boolean isInRegion(long handle) {
-			return (handle >= base) && (handle < (base + sizeof));
+		public boolean isInRegion(int handle) {
+			return (handle >= minWord) && (handle < (minWord + wordCount));
 		}
 
 		public boolean isInRegion(StructHeap heap) {
-			return this.base == calcRegionBaseForHeap(heap);
+			return this.minWord == calcRegionMinWordForHeap(heap);
 		}
 
 		public int gc(long begin) {
@@ -605,7 +632,7 @@ public class StructGC {
 
 			outer: while (!toFree.isEmpty()) {
 
-				long handle = toFree.pop();
+				int handle = toFree.pop();
 
 				for (int i = gcHeaps.size() - 1; i >= 0; i--) {
 					StructHeap heap = gcHeaps.get(i);
@@ -623,9 +650,10 @@ public class StructGC {
 				failed.push(handle);
 			}
 
+			int freed = (originalToFree - toFree.size);
 			while (!failed.isEmpty())
 				toFree.push(failed.pop());
-			return originalToFree - toFree.size;
+			return freed;
 		}
 
 		public int getHandleCount() {
@@ -733,66 +761,43 @@ public class StructGC {
 		}
 	}
 
-	public static class LongStack {
-		private long[] values = new long[16];
+	public static class IntList {
+		private int[] values = new int[16];
 		private int size = 0;
 
-		public void push(long value) {
+		public void add(int value) {
 			if (size == values.length)
 				values = Arrays.copyOf(values, values.length * 2);
 			values[size++] = value;
 		}
 
-		public boolean isEmpty() {
-			return size == 0;
-		}
-
-		public long pop() {
-			return values[--size];
-		}
-
-		public void clear() {
-			size = 0;
-		}
-	}
-
-	public static class LongList {
-		private long[] values = new long[16];
-		private int size = 0;
-
-		public void add(long value) {
-			if (size == values.length)
-				values = Arrays.copyOf(values, values.length * 2);
-			values[size++] = value;
-		}
-
-		public boolean contains(long value) {
+		public boolean contains(int value) {
 			return this.indexOf(value) != -1;
 		}
 
-		public int indexOf(long value) {
+		public int indexOf(int value) {
 			for (int i = 0; i < size; i++)
 				if (values[i] == value)
 					return i;
 			return -1;
 		}
 
-		public long get(int index) {
+		public int get(int index) {
 			if (index >= size)
 				throw new IllegalStateException();
 			return values[index];
 		}
 
-		public long removeIndex(int index) {
+		public int removeIndex(int index) {
 			if (index < 0 || index >= size)
 				throw new IllegalStateException();
 			System.arraycopy(values, index + 1, values, index, size - index - 1);
-			long got = values[index];
+			int got = values[index];
 			size--;
 			return got;
 		}
 
-		public boolean removeValue(long value) {
+		public boolean removeValue(int value) {
 			int io = this.indexOf(value);
 			if (io == -1)
 				return false;
