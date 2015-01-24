@@ -1,0 +1,6 @@
+net.indiespot.struct.StructTest$Vec3
+net.indiespot.struct.StructTest$Ship
+net.indiespot.struct.StructTest$PosVelRef
+net.indiespot.struct.StructTest$PosVelView
+net.indiespot.struct.StructTest$ArrayEmbed
+net.indiespot.struct.StructTest$StructEmbed

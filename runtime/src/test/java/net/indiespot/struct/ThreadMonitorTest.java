@@ -1,30 +1,49 @@
 package net.indiespot.struct;
 
-import java.util.Random;
-
 import net.indiespot.struct.runtime.ThreadMonitor;
+import org.junit.Ignore;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TestRule;
+import org.junit.rules.Timeout;
+
+import java.util.Random;
+import java.util.concurrent.CountDownLatch;
 
 public class ThreadMonitorTest {
-	public static void main(String[] args) {
-		ThreadMonitor.setPollInterval(100);
+    @Rule
+    public TestRule timeout = new Timeout(10000);
 
-		ThreadMonitor.addListener(new ThreadMonitor.ThreadListener() {
-			@Override
-			public void onThreadStart(long threadId) {
-				System.out.println("onThreadStart:" + threadId);
-			}
+    @Ignore("not really a test")
+    @Test
+    public void testUsage() throws Exception {
+        ThreadMonitor.setPollInterval(100);
 
-			@Override
-			public void onThreadDeath(long threadId) {
-				System.out.println("onThreadDeath:" + threadId);
-			}
-		});
+        final CountDownLatch latch = new CountDownLatch(100);
 
-		Random rndm = new Random();
-		for(int i = 0; i < 100; i++) {
-			spawnWorker(rndm.nextInt(5000));
-		}
-	}
+        ThreadMonitor.addListener(new ThreadMonitor.ThreadListener() {
+            @Override
+            public void onThreadStart(long threadId) {
+                System.out.println("onThreadStart:" + threadId);
+            }
+
+            @Override
+            public void onThreadDeath(long threadId) {
+                latch.countDown();
+                System.out.println("onThreadDeath:" + threadId);
+            }
+        });
+
+        Random rndm = new Random();
+        for(int i = 0; i < 100; i++) {
+            spawnWorker(rndm.nextInt(1000));
+        }
+
+        latch.await();
+
+    }
+
+
 
 	private static void spawnWorker(final long delay) {
 		new Thread(new Runnable() {
