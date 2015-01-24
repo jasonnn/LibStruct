@@ -1,3 +1,0 @@
-test.net.indiespot.demo.softlylit.structs.Point
-test.net.indiespot.demo.softlylit.structs.Line
-test.net.indiespot.demo.softlylit.structs.Triangle
