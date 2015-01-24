@@ -22,9 +22,9 @@ import org.objectweb.asm.Opcodes;
 
 import net.indiespot.struct.transform.StructEnv;
 
-public class StructAgentDelegate {
+public class StructAgentDelegate implements AgentDelegate{
 
-	public static void premain(String args, Instrumentation inst) {
+	public void premain(String args, Instrumentation inst) {
 		System.out.println("StructAgent: reading struct-defs from resource: '" + args + "'");
 
 		try (InputStream in = StructAgentDelegate.class.getClassLoader().getResourceAsStream(args)) {

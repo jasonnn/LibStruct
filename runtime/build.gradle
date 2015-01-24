@@ -3,3 +3,15 @@ dependencies {
     compile project(':api')
     compile 'org.ow2.asm:asm-all:5.0.3'
 }
+//ignore warnings about Unsafe?
+compileJava.options.compilerArgs += '-XDignore.symbol.file'
+
+
+test {
+    def rtJarTask = project(':agent').tasks.getByPath('jar')
+    dependsOn rtJarTask
+
+    def agentJar = rtJarTask.archivePath.absolutePath
+
+    jvmArgs "-javaagent:$agentJar=struct-def.txt"//,'-DLibStruct.PRINT_LOG=true'
+}

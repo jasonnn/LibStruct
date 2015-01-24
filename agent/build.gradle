@@ -1,0 +1,7 @@
+dependencies {
+    //runtime project(':runtime')
+}
+jar {
+    manifest.attributes(['Premain-Class': 'net.indiespot.struct.StructAgent',
+                         'Agent-Class'  : 'net.indiespot.struct.StructAgent'])
+}

@@ -8,12 +8,12 @@ import java.util.Random;
 
 import net.indiespot.struct.api.*;
 import net.indiespot.struct.runtime.IllegalStackAccessError;
-import net.indiespot.struct.runtime.StructAllocationStack;
 import net.indiespot.struct.runtime.StructGC;
 import net.indiespot.struct.runtime.StructMemory;
 import net.indiespot.struct.runtime.StructUnsafe;
 import net.indiespot.struct.runtime.SuspiciousFieldAssignmentError;
 import net.indiespot.struct.transform.StructEnv;
+import org.junit.Test;
 
 public class StructTest {
 	public static class WideHandleTest {
@@ -223,8 +223,8 @@ public class StructTest {
 		TestFromPointer.test();
 
 		TestEmbeddedArrayUsage.test();
-		TestRealloc.test();
-		TestLargeAlloc.test();
+		//TestRealloc.test();
+		//TestLargeAlloc.test();
 
 		if (false)
 			TestCollectionAPI.test();
@@ -239,27 +239,9 @@ public class StructTest {
 		System.out.println("done");
 	}
 
-	public static class TestLargeAlloc {
-		public static void test() {
-			int count = Integer.MAX_VALUE / (Struct.sizeof(Vec3.class) - 2);
-			System.out.println("count=" + count);
-			System.out.println("sizeof=" + Struct.sizeof(Vec3.class));
-			Vec3 base = Struct.callocArrayBase(Vec3.class, count);
-			for (int i = 1; i < count; i++) {
-				Vec3 v1 = Struct.index(base, Vec3.class, i - 1);
-				Vec3 v2 = Struct.index(base, Vec3.class, i - 0);
-				v2.mul(v1);
-				v1.mul(v2);
-				long p1 = Struct.getPointer(v1);
-				long p2 = Struct.getPointer(v2);
-				assert (p2 - p1) == Struct.sizeof(Vec3.class);
-			}
-			Struct.free(base);
-		}
-	}
-
-	public static class TestRealloc {
-		public static void test() {
+    public static class TestRealloc {
+        //@Test
+		public  void test() {
 			Vec3[] arr = Struct.mallocArray(Vec3.class, 13);
 			assert arr.length == 13;
 
@@ -959,48 +941,7 @@ public class StructTest {
 		}
 	}
 
-	public static class TestStructEnv {
-		public static void test() {
-			test0();
-			test1();
-			test2();
-			test3();
-			test4();
-		}
-
-		public static void test0() {
-			try {
-				assert false;
-
-				throw new IllegalStateException("asserts must be enabled");
-			} catch (AssertionError err) {
-				System.out.println("StructTest: asserts are enabled.");
-			}
-		}
-
-		public static void test1() {
-			assert Struct.isReachable(null) == false;
-		}
-
-		public static void test2() {
-			assert Struct.isReachable(new Vec3()) == true;
-		}
-
-		public static void test3() {
-			assert Struct.getPointer(new Vec3()) > 0L;
-		}
-
-		public static void test4() {
-			Class<?> typ1 = String.class;
-			// Class<?> typ2 = Vec3.class;
-
-			System.out.println(typ1);
-			// System.out.println("x="+typ2);
-			// System.exit(-1);
-		}
-	}
-
-	public static class TestMultiThreadedAllocation {
+    public static class TestMultiThreadedAllocation {
 		public static void test() {
 			Thread[] ts = new Thread[8];
 			for (int i = 0; i < ts.length; i++) {
