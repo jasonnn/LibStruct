@@ -1,0 +1,4 @@
+dependencies{
+    compile project(':api')
+    compile 'org.lwjgl.lwjgl:lwjgl:2.9.2'
+}
