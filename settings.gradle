@@ -1,0 +1,12 @@
+rootProject.name = 'LibStruct'
+
+include 'agent'
+
+include 'runtime'
+
+include 'api'
+
+include 'codegen'
+
+include 'example'
+
