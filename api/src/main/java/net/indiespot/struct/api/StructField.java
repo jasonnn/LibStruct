@@ -1,0 +1,13 @@
+package net.indiespot.struct.api;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
+@Retention(RetentionPolicy.CLASS)
+public @interface StructField {
+	int offset() default -1;
+
+	int length() default 1;
+
+	boolean embed() default false;
+}
