@@ -1,6 +1,6 @@
-net.indiespot.struct.StructTest$Vec3
-net.indiespot.struct.StructTest$Ship
-net.indiespot.struct.StructTest$PosVelRef
-net.indiespot.struct.StructTest$PosVelView
-net.indiespot.struct.StructTest$ArrayEmbed
-net.indiespot.struct.StructTest$StructEmbed
+net.indiespot.struct.testlib.Vec3
+net.indiespot.struct.testlib.Ship
+net.indiespot.struct.testlib.PosVelRef
+net.indiespot.struct.testlib.PosVelView
+net.indiespot.struct.testlib.ArrayEmbed
+net.indiespot.struct.testlib.StructEmbed
