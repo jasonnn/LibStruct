@@ -1,17 +1,15 @@
 package net.indiespot.struct;
 
 import net.indiespot.struct.api.Struct;
-import org.junit.ClassRule;
+import net.indiespot.struct.testlib.Vec3;
 import org.junit.Test;
-import org.junit.rules.TestRule;
 
 /**
  * Created by jason on 1/24/15.
  */
 @SuppressWarnings("PointlessBooleanExpression")
-public class TestStructEnv {
-    @ClassRule
-    public static TestRule gc = new GCListenerRule();
+public class TestStructEnv extends TestBase {
+
 
     public static void test() {
         new TestStructEnv().testAll();
@@ -43,12 +41,12 @@ public class TestStructEnv {
 
     @Test
     public void test2() {
-        assert Struct.isReachable(new StructTest.Vec3()) == true;
+        assert Struct.isReachable(new Vec3()) == true;
     }
 
     @Test
     public void test3() {
-        assert Struct.getPointer(new StructTest.Vec3()) > 0L;
+        assert Struct.getPointer(new Vec3()) > 0L;
     }
 
     @Test

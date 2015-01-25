@@ -1,5 +1,7 @@
 package net.indiespot.struct.api;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.nio.ByteBuffer;
 
 
@@ -12,6 +14,7 @@ public class Struct {
 	 * Point p2 = Struct.nullStruct(Point.class); // guaranteed to work
 	 * </pre>
 	 */
+    @NotNull
 	public static <T> T nullStruct(Class<T> structType) {
 		throwFit();
 		return null;
@@ -21,6 +24,7 @@ public class Struct {
 	 * Creates an array with the specified type and length, filled with null
 	 * references.
 	 */
+    @NotNull
 	public static <T> T[] nullArray(Class<T> structType, int length) {
 		throwFit();
 		return null;
@@ -36,7 +40,7 @@ public class Struct {
 	 * int s1 = 8;
 	 * </pre>
 	 */
-
+    @NotNull
 	public static <T> int sizeof(Class<T> structType) {
 		throwFit();
 		return 0;
@@ -46,7 +50,7 @@ public class Struct {
 	 * Allocates a struct on the LibStruct heap, of which the memory will
 	 * contain garbage.
 	 */
-
+    @NotNull
 	public static <T> T malloc(Class<T> structType) {
 		throwFit();
 		return null;
@@ -56,7 +60,7 @@ public class Struct {
 	 * Operates like <code>Struct.malloc(type)</code>, but has its backing
 	 * memory cleared.
 	 */
-
+    @NotNull
 	public static <T> T calloc(Class<T> structType) {
 		throwFit();
 		return null;
@@ -67,7 +71,7 @@ public class Struct {
 	 * contain garbage. The structs in the array are in a contiguous block of
 	 * memory.
 	 */
-
+    @NotNull
 	public static <T> T[] mallocArray(Class<T> structType, int length) {
 		throwFit();
 		return null;
@@ -77,7 +81,7 @@ public class Struct {
 	 * Operates like <code>Struct.malloc(type,length)</code>, but has its
 	 * backing memory cleared.
 	 */
-
+    @NotNull
 	public static <T> T[] callocArray(Class<T> structType, int length) {
 		throwFit();
 		return null;
@@ -91,7 +95,7 @@ public class Struct {
 	 * contiguous block of memory. The structs in the input-array may be
 	 * scattered.
 	 */
-
+    @NotNull
 	public static <T> T[] reallocArray(Class<T> structType, T[] currentArray, int newLength) {
 		throwFit();
 		return null;
@@ -112,7 +116,7 @@ public class Struct {
 	 * Struct.free(base);
 	 * </pre>
 	 */
-
+    @NotNull
 	public static <T> T mallocArrayBase(Class<T> structType, int length) {
 		throwFit();
 		return null;
@@ -122,7 +126,7 @@ public class Struct {
 	 * Operates like <code>Struct.mallocArrayBase(type,length)</code>, but has
 	 * its backing memory cleared.
 	 */
-
+    @NotNull
 	public static <T> T callocArrayBase(Class<T> structType, int length) {
 		throwFit();
 		return null;
@@ -193,7 +197,7 @@ public class Struct {
 	 * Point position = Struct.fromPointer(Struct.getPointer(ship) + offset));
 	 * </pre>
 	 */
-
+    @NotNull
 	public static <T, A> A view(T struct, Class<A> asType, int offsetMultipleOf4) {
 		throwFit();
 		return null;
@@ -215,7 +219,7 @@ public class Struct {
 	 * Struct.free(base);
 	 * </pre>
 	 */
-
+    @NotNull
 	public static <T> T index(T base, Class<T> asType, int index) {
 		throwFit();
 		return null;
@@ -227,7 +231,7 @@ public class Struct {
 	 * strong reference to this buffer, to prevent accessing the returned
 	 * structs when the Java GC may have reclaimed the backing memory.
 	 */
-
+    @NotNull
 	public static <T> T[] map(Class<T> structType, ByteBuffer bb) {
 		throwFit();
 		return null;
@@ -237,7 +241,7 @@ public class Struct {
 	 * Operates like <code>Struct.map(type, buffer)</code>, except it uses the
 	 * specified offset and stride.
 	 */
-
+    @NotNull
 	public static <T> T[] map(Class<T> structType, ByteBuffer bb, int stride, int offset) {
 		throwFit();
 		return null;
@@ -246,7 +250,7 @@ public class Struct {
 	/**
 	 * Reinterpret the memory at the specified address as a struct of any type.
 	 */
-
+    @NotNull
 	public static <T> T fromPointer(long pointer) {
 		throwFit();
 		return null;
@@ -256,7 +260,7 @@ public class Struct {
 	 * Operates like <code>Struct.fromPointer(pointer)</code>, except that it
 	 * returns a struct array with the specified length.
 	 */
-
+    @NotNull
 	public static <T> T[] fromPointer(long pointer, Class<T> structType, int length) {
 		throwFit();
 		return null;
@@ -266,7 +270,7 @@ public class Struct {
 	 * Operates like <code>Struct.fromPointer(pointer, type, length)</code>, except that it
 	 * uses the specified stride, as opposed to sizeof(type).
 	 */
-
+    @NotNull
 	public static <T> T[] fromPointer(long pointer, int stride, int length) {
 		throwFit();
 		return null;
@@ -275,7 +279,7 @@ public class Struct {
 	/**
 	 * Get the pointer of the specified struct.
 	 */
-
+    @NotNull
 	public static <T> long getPointer(T struct) {
 		throwFit();
 		return 0L;
@@ -285,7 +289,7 @@ public class Struct {
 	 * Tests whether a stack allocated struct reference is still valid to
 	 * reference at the callsite of this method. For debugging purposes.
 	 */
-
+    @NotNull
 	public static <T> boolean isReachable(T struct) {
 		throwFit();
 		return false;
