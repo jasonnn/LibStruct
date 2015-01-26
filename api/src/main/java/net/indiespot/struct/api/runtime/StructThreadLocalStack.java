@@ -1,4 +1,4 @@
-package net.indiespot.struct.runtime;
+package net.indiespot.struct.api.runtime;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;

@@ -8,8 +8,8 @@ import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 
-import net.indiespot.struct.runtime.StructMemory;
-import net.indiespot.struct.runtime.UnsupportedCallsiteException;
+import net.indiespot.struct.api.runtime.StructMemory;
+import net.indiespot.struct.api.runtime.UnsupportedCallsiteException;
 
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.Attribute;

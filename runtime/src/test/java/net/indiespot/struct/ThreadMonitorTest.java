@@ -1,6 +1,6 @@
 package net.indiespot.struct;
 
-import net.indiespot.struct.runtime.ThreadMonitor;
+import net.indiespot.struct.api.runtime.ThreadMonitor;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;

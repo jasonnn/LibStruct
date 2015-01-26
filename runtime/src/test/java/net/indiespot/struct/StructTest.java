@@ -5,15 +5,16 @@ import java.util.Random;
 
 
 import net.indiespot.struct.api.*;
-import net.indiespot.struct.runtime.IllegalStackAccessError;
-import net.indiespot.struct.runtime.StructGC;
-import net.indiespot.struct.runtime.StructMemory;
-import net.indiespot.struct.runtime.StructUnsafe;
-import net.indiespot.struct.runtime.SuspiciousFieldAssignmentError;
+import net.indiespot.struct.api.annotations.CopyStruct;
+import net.indiespot.struct.api.annotations.TakeStruct;
+import net.indiespot.struct.api.runtime.IllegalStackAccessError;
+import net.indiespot.struct.api.runtime.StructGC;
+import net.indiespot.struct.api.runtime.StructMemory;
+import net.indiespot.struct.api.runtime.StructUnsafe;
+import net.indiespot.struct.api.runtime.SuspiciousFieldAssignmentError;
 import net.indiespot.struct.testlib.*;
 import net.indiespot.struct.transform.StructEnv;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 
@@ -21,7 +22,7 @@ import org.junit.Test;
 public class StructTest extends TestBase {
     public static void main(String[] args) {
 
-        StructGC.addListener(new StructGC.GcInfo() {
+        StructGC.addListener(new StructGC.GCListener() {
 
             @Override
             public void onGC(int freedHandles, int remainingHandles, int gcHeaps, int emptyHeaps, long tookNanos) {
@@ -108,7 +109,7 @@ public class StructTest extends TestBase {
         TestEmbedStruct.test();
         if (StructEnv.SAFETY_FIRST)
             TestSuspiciousFieldAssignment.test();
-        TestFromPointer.test();
+        //TestFromPointer.test();
         TestCollectionAPI.test();
 
         TestEmbeddedArrayUsage.test();
@@ -126,7 +127,6 @@ public class StructTest extends TestBase {
         System.out.println("done");
     }
 
-    @Ignore("bigtime fail")
     @Test
     public void testRealloc() throws Exception {
 
@@ -207,7 +207,6 @@ public class StructTest extends TestBase {
             // ae.iarr = new int[4]; // this will fail
         }
     }
-    @Ignore("hangs")
     @Test
     public void testFromPointer() throws Exception {
         ByteBuffer bb = ByteBuffer.allocateDirect(234);
@@ -232,27 +231,6 @@ public class StructTest extends TestBase {
 
     }
 
-    public static class TestFromPointer {
-        public static void test() {
-            ByteBuffer bb = ByteBuffer.allocateDirect(234);
-            long addr = StructUnsafe.getBufferBaseAddress(bb);
-            Vec3 v1 = Struct.fromPointer(addr + 0 * Struct.sizeof(Vec3.class));
-            Vec3 v2 = Struct.fromPointer(addr + 1 * Struct.sizeof(Vec3.class));
-            assert Struct.getPointer(v1) == (addr + 0 * Struct.sizeof(Vec3.class));
-            assert Struct.getPointer(v2) == (addr + 1 * Struct.sizeof(Vec3.class));
-
-            Vec3[] vs = Struct.fromPointer(addr, Vec3.class, 2);
-            assert vs[0] == v1;
-            assert vs[1] == v2;
-
-            vs = Struct.fromPointer(addr, 12, 2);
-            assert vs[0] == v1;
-            assert vs[1] == v2;
-
-            bb.clear(); // prevent untimely GC
-        }
-    }
-
     public static class TestNull2 {
         public static void test() {
             Ship ship = new Ship();
@@ -263,7 +241,7 @@ public class StructTest extends TestBase {
         }
     }
 
-    @Test(expected = java.lang.IllegalStateException.class)
+    @Test(expected = IllegalStateException.class)
     public void testDuplicateOverloadedMethod() throws Exception {
         TestDuplicateOverloadedMethod.test(1);
         TestDuplicateOverloadedMethod.test(new Vec3());
@@ -856,7 +834,7 @@ public class StructTest extends TestBase {
 
             StructGC.discardThreadLocal();
 
-            StructGC.addListener(new StructGC.GcInfo() {
+            StructGC.addListener(new StructGC.GCListener() {
                 @Override
                 public void onGC(int freedHandles, int remainingHandles, int gcHeaps, int emptyHeaps, long tookNanos) {
                     System.out.println("StructGC: handles freed: " + (freedHandles / 1024) + "K/" + (freedHandles + remainingHandles) / 1024 + "K, empty heaps: " + emptyHeaps + "/" + (emptyHeaps + gcHeaps) + ", collection took: " + (tookNanos / 1_000) + "us");

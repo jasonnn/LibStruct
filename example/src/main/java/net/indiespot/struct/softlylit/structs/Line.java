@@ -1,9 +1,9 @@
 package net.indiespot.struct.softlylit.structs;
 
 
-import net.indiespot.struct.api.StructField;
-import net.indiespot.struct.api.StructType;
-import net.indiespot.struct.api.TakeStruct;
+import net.indiespot.struct.api.annotations.StructField;
+import net.indiespot.struct.api.annotations.StructType;
+import net.indiespot.struct.api.annotations.TakeStruct;
 
 @StructType
 public class Line {

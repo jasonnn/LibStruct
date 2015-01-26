@@ -1,5 +1,6 @@
 package net.indiespot.struct.api;
 
+import net.indiespot.struct.api.runtime.StructAllocationStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.ByteBuffer;
@@ -295,21 +296,20 @@ public class Struct {
 		return false;
 	}
 
-	//
-//TODO commented out to remove dependency on runtime
-//	public static StructAllocationStack createStructAllocationStack(int bytes) {
-//		throwFit();
-//		return null;
-//	}
-//
-//	public static void discardStructAllocationStack(StructAllocationStack stack) {
-//		throwFit();
-//	}
-//
-//	public static <T> T stackAlloc(StructAllocationStack stack, Class<T> structType) {
-//		throwFit();
-//		return null;
-//	}
+
+	public static StructAllocationStack createStructAllocationStack(int bytes) {
+		throwFit();
+		return null;
+	}
+
+	public static void discardStructAllocationStack(StructAllocationStack stack) {
+		throwFit();
+	}
+
+	public static <T> T stackAlloc(StructAllocationStack stack, Class<T> structType) {
+		throwFit();
+		return null;
+	}
 
 	//
 

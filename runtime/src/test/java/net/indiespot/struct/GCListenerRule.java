@@ -1,6 +1,6 @@
 package net.indiespot.struct;
 
-import net.indiespot.struct.runtime.StructGC;
+import net.indiespot.struct.api.runtime.StructGC;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 
@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 /**
  * Created by jason on 1/24/15.
  */
-public class GCListenerRule extends TestWatcher implements StructGC.GcInfo {
+public class GCListenerRule extends TestWatcher implements StructGC.GCListener {
     private static final Logger log = Logger.getLogger(GCListenerRule.class.getName());
 
     @Override

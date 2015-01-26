@@ -1,4 +1,4 @@
-package net.indiespot.struct.runtime;
+package net.indiespot.struct.api.runtime;
 
 public abstract class FastThreadLocal<T> {
 	public static final int MAX_SUPPORTED_THREADS = 100_000;

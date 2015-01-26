@@ -15,9 +15,20 @@ public class StructConfig {
 //		}
 //	}
 
+
+    static {
+        SAFETY_FIRST = StructConfig.parseVmArg(StructConfig.class, "SAFETY_FIRST", 0, false) != 0L;
+        PRINT_LOG = StructConfig.parseVmArg(StructConfig.class, "PRINT_LOG", 0, false) != 0L;
+        MEMORY_BASE_OFFSET = StructConfig.parseVmArg(StructConfig.class, "MEMORY_BASE_OFFSET", 0, false) != 0L;
+    }
 	private static final String magnitude_lookup_table = "KMGT"; // kilo, mega,
 																	// giga,
 																	// tera
+
+
+    public static final boolean SAFETY_FIRST;
+    public static final boolean PRINT_LOG;
+    public static final boolean MEMORY_BASE_OFFSET;
 
 	public static final long parseVmArg(Class<?> type, String prop, long orElse, boolean asPOT) {
 		String val = System.getProperty(type.getName() + "." + prop);

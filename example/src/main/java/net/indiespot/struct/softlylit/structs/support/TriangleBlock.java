@@ -2,7 +2,8 @@ package net.indiespot.struct.softlylit.structs.support;
 
 
 import net.indiespot.struct.api.Struct;
-import net.indiespot.struct.api.TakeStruct;
+import net.indiespot.struct.api.StructConfig;
+import net.indiespot.struct.api.annotations.TakeStruct;
 import net.indiespot.struct.softlylit.structs.Triangle;
 
 public class TriangleBlock {
@@ -40,10 +41,10 @@ public class TriangleBlock {
 	}
 
 	public void addRange(TriangleBlock src, int off, int len) {
-		if (StructEnv.SAFETY_FIRST)
+		if (StructConfig.SAFETY_FIRST)
 			if (off < 0 || len < 0 || off + len > src.size)
 				throw new IllegalStateException();
-		if (StructEnv.SAFETY_FIRST)
+		if (StructConfig.SAFETY_FIRST)
 			if (len > this.cap - this.size)
 				throw new IllegalStateException();
 		int offset = this.size;
@@ -52,7 +53,7 @@ public class TriangleBlock {
 	}
 
 	public void addAll(TriangleBlock src) {
-		if (StructEnv.SAFETY_FIRST)
+		if (StructConfig.SAFETY_FIRST)
 			if (src.size > this.cap - this.size)
 				throw new IllegalStateException();
 		int offset = this.size;
@@ -62,7 +63,7 @@ public class TriangleBlock {
 
 	@TakeStruct
 	public Triangle get(int index) {
-		if (StructEnv.SAFETY_FIRST)
+		if (StructConfig.SAFETY_FIRST)
 			if (index < 0 || index >= size)
 				throw new IllegalStateException();
 		return Struct.index(base, Triangle.class, index);

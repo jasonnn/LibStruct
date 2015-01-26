@@ -2,7 +2,7 @@ package net.indiespot.struct.codegen.templates;
 
 
 import net.indiespot.struct.api.Struct;
-import net.indiespot.struct.api.TakeStruct;
+import net.indiespot.struct.api.annotations.TakeStruct;
 import net.indiespot.struct.transform.StructEnv;
 
 public class Block<T> {
