@@ -1,6 +1,6 @@
 package net.indiespot.struct.testlib;
 
-import net.indiespot.struct.api.Struct;
+import net.indiespot.struct.Struct;
 import net.indiespot.struct.api.annotations.StructField;
 import net.indiespot.struct.api.annotations.StructType;
 import net.indiespot.struct.api.annotations.TakeStruct;

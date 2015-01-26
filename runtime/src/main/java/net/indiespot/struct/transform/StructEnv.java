@@ -1,7 +1,7 @@
 package net.indiespot.struct.transform;
 
+import net.indiespot.struct.Struct;
 import net.indiespot.struct.StructInfo;
-import net.indiespot.struct.api.Struct;
 import net.indiespot.struct.api.StructConfig;
 import net.indiespot.struct.api.annotations.*;
 import net.indiespot.struct.api.runtime.StructAllocationStack;
@@ -1082,7 +1082,8 @@ public class StructEnv {
                 sb.append("\t\t").append(entry.getKey()).append('\n');
                 if (!StructEnv.PRINT_LOG)
                     sb.append("\n\t\tfor more information set: -DLibStruct.PRINT_LOG=true");
-                throw new IllegalStateException(sb.toString());
+                System.err.println(sb.toString());
+                //throw new IllegalStateException(sb.toString());
             }
         }
 

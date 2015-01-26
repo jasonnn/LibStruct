@@ -2,6 +2,7 @@ package net.indiespot.struct;
 
 import net.indiespot.struct.api.runtime.StructAllocationStack;
 import net.indiespot.struct.api.runtime.StructThreadLocalStack;
+import net.indiespot.struct.testlib.NormalVec3;
 import net.indiespot.struct.testlib.Vec3;
 
 public class TheAgentD {
