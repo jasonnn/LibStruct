@@ -35,7 +35,7 @@ public class ThreadMonitorTest {
         });
 
         Random rndm = new Random();
-        for(int i = 0; i < 100; i++) {
+        for (int i = 0; i < 100; i++) {
             spawnWorker(rndm.nextInt(1000));
         }
 
@@ -44,18 +44,16 @@ public class ThreadMonitorTest {
     }
 
 
-
-	private static void spawnWorker(final long delay) {
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					Thread.sleep(delay);
-				}
-				catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		}).start();
-	}
+    private static void spawnWorker(final long delay) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(delay);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
 }

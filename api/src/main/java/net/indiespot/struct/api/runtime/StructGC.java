@@ -1,5 +1,7 @@
 package net.indiespot.struct.api.runtime;
 
+import net.indiespot.struct.api.StructConfig;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
@@ -7,8 +9,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import net.indiespot.struct.api.StructConfig;
 
 public class StructGC {
 
@@ -30,7 +30,7 @@ public class StructGC {
         final int pageSize = 4 * 1024;
 
         gc_heap_size = (int) StructConfig.parseVmArg(StructGC.class, "HEAP_SIZE", 16 * pageSize, true);
-        gc_region_size = (int) StructConfig.parseVmArg(StructGC.class, "REGION_SIZE", gc_heap_size * 16, true);
+        gc_region_size = (int) StructConfig.parseVmArg(StructGC.class, "REGION_SIZE", gc_heap_size * 16l, true);
         gc_max_empty_heap_pool = (int) StructConfig.parseVmArg(StructGC.class, "MAX_EMPTY_HEAP_POOL", 1000, false);
 
         long maxMemUse = StructConfig.parseVmArg(StructGC.class, "MAX_MEMORY_USE", 1024L * 1024L * 1024L, true);
@@ -154,6 +154,7 @@ public class StructGC {
     }
 
     private static long testMemoryAccess(int handle, long stride, int count) {
+        //TODO: what?
         if (true)
             return 0L;
 
@@ -266,7 +267,7 @@ public class StructGC {
                 if (StructConfig.SAFETY_FIRST && unfreedHandles <= 0)
                     throw new IllegalStateException();
                 if (StructConfig.SAFETY_FIRST)
-                    if (!activeHandles.removeValue(handle))
+                    if (activeHandles.keepValue(handle))
                         throw new IllegalStateException();
                 if (--unfreedHandles == 0) {
                     System.out.println("free-base: " + base);
@@ -278,7 +279,7 @@ public class StructGC {
         }
     }
 
-    private static List<LargeMalloc> large_mallocs = new ArrayList<>();
+    private static final List<LargeMalloc> large_mallocs = new ArrayList<>();
 
     public static void freeHandle(int handle) {
         StructHeap localHeap = local_heaps.get();
@@ -541,6 +542,7 @@ public class StructGC {
 
             synchronized (sync) {
                 // clean up empty regions
+                //TODO: ??
                 if (false)
                     for (int i = gc_region_set.regions.size() - 1; i >= 0; i--) {
                         if (!gc_region_set.regions.get(i).gcHeaps.isEmpty())
@@ -581,8 +583,7 @@ public class StructGC {
             synchronized (sync) {
                 for (int i = 0, size = sync_region_set.regions.size(); i < size; i++)
                     handleCount += sync_region_set.regions.get(i).getHandleCount();
-                for (int i = 0, size = large_mallocs.size(); i < size; i++)
-                    handleCount += large_mallocs.get(i).unfreedHandles;
+                for (LargeMalloc large_malloc : large_mallocs) handleCount += large_malloc.unfreedHandles;
             }
             final int[] holder = new int[1];
             local_heaps.visit(new FastThreadLocal.Visitor<StructHeap>() {
@@ -804,12 +805,12 @@ public class StructGC {
             return got;
         }
 
-        public boolean removeValue(int value) {
+        public boolean keepValue(int value) {
             int io = this.indexOf(value);
             if (io == -1)
-                return false;
+                return true;
             this.removeIndex(io);
-            return true;
+            return false;
         }
 
         public boolean isEmpty() {
@@ -823,10 +824,10 @@ public class StructGC {
         @Override
         public String toString() {
             StringBuilder sb = new StringBuilder();
-            sb.append(StructGC.class.getSimpleName()).append("[");
+            sb.append(StructGC.class.getSimpleName()).append('[');
             for (int i = 0; i < size; i++)
                 sb.append(values[i]).append(',');
-            sb.append("]");
+            sb.append(']');
             return sb.toString();
         }
     }
