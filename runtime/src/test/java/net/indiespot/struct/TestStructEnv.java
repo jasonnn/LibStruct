@@ -1,6 +1,5 @@
 package net.indiespot.struct;
 
-import net.indiespot.struct.api.Struct;
 import net.indiespot.struct.testlib.Vec3;
 import org.junit.Test;
 

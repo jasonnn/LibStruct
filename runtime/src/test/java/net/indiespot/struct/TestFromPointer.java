@@ -1,14 +1,14 @@
 package net.indiespot.struct;
 
-import net.indiespot.struct.api.Struct;
 import net.indiespot.struct.api.runtime.StructUnsafe;
 import net.indiespot.struct.testlib.Vec3;
 import org.junit.Assert;
 import org.junit.Test;
-import org.openjdk.jol.info.ClassLayout;
-import org.openjdk.jol.util.VMSupport;
 
 import java.nio.ByteBuffer;
+
+//import org.openjdk.jol.info.ClassLayout;
+//import org.openjdk.jol.util.VMSupport;
 
 /**
  * Created by jason on 1/25/15.
@@ -16,12 +16,12 @@ import java.nio.ByteBuffer;
 @SuppressWarnings("PointlessArithmeticExpression")
 public class TestFromPointer {
 
-    @Test
-    public void testJOL() throws Exception {
-        System.out.println(VMSupport.vmDetails());
-        System.out.println(ClassLayout.parseClass(Vec3.class).toPrintable());
-
-    }
+//    @Test
+//    public void testJOL() throws Exception {
+//        System.out.println(VMSupport.vmDetails());
+//        System.out.println(ClassLayout.parseClass(Vec3.class).toPrintable());
+//
+//    }
 
     @Test
     public void testFromPointer() {

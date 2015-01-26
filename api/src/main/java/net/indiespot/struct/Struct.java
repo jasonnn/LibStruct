@@ -1,4 +1,4 @@
-package net.indiespot.struct.api;
+package net.indiespot.struct;
 
 import net.indiespot.struct.api.runtime.StructAllocationStack;
 import org.jetbrains.annotations.NotNull;

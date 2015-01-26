@@ -1,4 +1,4 @@
-package net.indiespot.struct;
+package net.indiespot.struct.testlib;
 
 public class NormalVec3 {
     public float x, y, z;

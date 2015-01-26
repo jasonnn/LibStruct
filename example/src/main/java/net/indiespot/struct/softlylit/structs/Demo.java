@@ -1,6 +1,6 @@
 package net.indiespot.struct.softlylit.structs;
 
-import net.indiespot.struct.api.Struct;
+import net.indiespot.struct.Struct;
 import net.indiespot.struct.api.annotations.TakeStruct;
 import net.indiespot.struct.api.runtime.StructAllocationStack;
 import net.indiespot.struct.api.runtime.StructGC;

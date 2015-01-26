@@ -1,7 +1,7 @@
 package net.indiespot.struct.softlylit.structs.support;
 
 
-import net.indiespot.struct.api.Struct;
+import net.indiespot.struct.Struct;
 import net.indiespot.struct.api.StructConfig;
 import net.indiespot.struct.api.annotations.TakeStruct;
 import net.indiespot.struct.softlylit.structs.Point;
