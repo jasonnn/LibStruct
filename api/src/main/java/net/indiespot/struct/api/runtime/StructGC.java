@@ -1,4 +1,4 @@
-package net.indiespot.struct.runtime;
+package net.indiespot.struct.api.runtime;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import net.indiespot.struct.api.StructConfig;
-import net.indiespot.struct.transform.StructEnv;
 
 public class StructGC {
 
@@ -121,10 +120,10 @@ public class StructGC {
     }
 
     private static int mallocImpl(long stride, int count) {
-        if (StructEnv.SAFETY_FIRST)
+        if (StructConfig.SAFETY_FIRST)
             if (stride <= 0)
                 throw new IllegalArgumentException();
-        if (StructEnv.SAFETY_FIRST)
+        if (StructConfig.SAFETY_FIRST)
             if (count <= 0)
                 throw new IllegalArgumentException();
 
@@ -147,7 +146,7 @@ public class StructGC {
             }
         }
 
-        if (StructEnv.SAFETY_FIRST) {
+        if (StructConfig.SAFETY_FIRST) {
             testMemoryAccess(handle, stride, count);
         }
 
@@ -209,7 +208,7 @@ public class StructGC {
     }
 
     public static int[] reallocArray(int sizeof, int[] src, int newLength) {
-        if (StructEnv.SAFETY_FIRST)
+        if (StructConfig.SAFETY_FIRST)
             for (int i = 0; i < src.length; i++)
                 if (src[i] == 0x00)
                     throw new NullPointerException("index=" + i);
@@ -231,7 +230,7 @@ public class StructGC {
         private IntList activeHandles;
 
         public LargeMalloc(long stride, int count) {
-            if (StructEnv.SAFETY_FIRST) {
+            if (StructConfig.SAFETY_FIRST) {
                 if (stride <= 0L)
                     throw new IllegalStateException();
                 if (count <= 0L)
@@ -243,7 +242,7 @@ public class StructGC {
             this.addr = StructMemory.alignAddressToWord(base);
             this.unfreedHandles = count;
 
-            if (StructEnv.SAFETY_FIRST) {
+            if (StructConfig.SAFETY_FIRST) {
                 activeHandles = new IntList();
 
                 if (count == 1) {
@@ -264,9 +263,9 @@ public class StructGC {
         public boolean freeHandle(int handle) {
             long pntr = StructMemory.handle2pointer(handle);
             if (pntr >= addr && pntr < addr + sizeof) {
-                if (StructEnv.SAFETY_FIRST && unfreedHandles <= 0)
+                if (StructConfig.SAFETY_FIRST && unfreedHandles <= 0)
                     throw new IllegalStateException();
-                if (StructEnv.SAFETY_FIRST)
+                if (StructConfig.SAFETY_FIRST)
                     if (!activeHandles.removeValue(handle))
                         throw new IllegalStateException();
                 if (--unfreedHandles == 0) {
@@ -437,13 +436,13 @@ public class StructGC {
 
                 if (i == gc_stress_timeout) {
                     synchronized (gc_info_callbacks) {
-                        for (GcInfo callback : gc_info_callbacks) {
+                        for (GCListener callback : gc_info_callbacks) {
                             callback.onStress();
                         }
                     }
                 } else if (i % gc_panic_timeout == gc_panic_timeout - 1) {
                     synchronized (gc_info_callbacks) {
-                        for (GcInfo callback : gc_info_callbacks) {
+                        for (GCListener callback : gc_info_callbacks) {
                             callback.onPanic();
                         }
                     }
@@ -695,7 +694,7 @@ public class StructGC {
                         }
 
                         synchronized (gc_info_callbacks) {
-                            for (GcInfo callback : gc_info_callbacks) {
+                            for (GCListener callback : gc_info_callbacks) {
                                 callback.onGC(freed, handleCount, gcHeaps, emptyHeaps, took);
                             }
                         }
@@ -721,9 +720,9 @@ public class StructGC {
         return (System.nanoTime() - begin) / 1_000L > gc_max_micros;
     }
 
-    private static final List<GcInfo> gc_info_callbacks = new ArrayList<>();
+    private static final List<GCListener> gc_info_callbacks = new ArrayList<>();
 
-    public static void addListener(GcInfo infoCallback) {
+    public static void addListener(GCListener infoCallback) {
         if (infoCallback == null)
             throw new NullPointerException();
 
@@ -732,18 +731,18 @@ public class StructGC {
         }
     }
 
-    public static void removeListener(GcInfo gcInfo) {
+    public static void removeListener(GCListener listener) {
         synchronized (gc_info_callbacks) {
-            gc_info_callbacks.remove(gcInfo);
+            gc_info_callbacks.remove(listener);
         }
     }
 
-    public static interface GcInfo {
-        public void onGC(int freedHandles, int remainingHandles, int gcHeaps, int emptyHeaps, long tookNanos);
+    public interface GCListener {
+        void onGC(int freedHandles, int remainingHandles, int gcHeaps, int emptyHeaps, long tookNanos);
 
-        public void onStress();
+        void onStress();
 
-        public void onPanic();
+        void onPanic();
     }
 
     public static class IntStack {

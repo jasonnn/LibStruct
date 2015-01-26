@@ -2,7 +2,8 @@ package net.indiespot.struct.softlylit.structs.support;
 
 
 import net.indiespot.struct.api.Struct;
-import net.indiespot.struct.api.TakeStruct;
+import net.indiespot.struct.api.StructConfig;
+import net.indiespot.struct.api.annotations.TakeStruct;
 import net.indiespot.struct.softlylit.structs.Line;
 
 public class LineBlock {
@@ -40,10 +41,10 @@ public class LineBlock {
 	}
 
 	public void addRange(LineBlock src, int off, int len) {
-		if (StructEnv.SAFETY_FIRST)
+		if (StructConfig.SAFETY_FIRST)
 			if (off < 0 || len < 0 || off + len > src.size)
 				throw new IllegalStateException();
-		if (StructEnv.SAFETY_FIRST)
+		if (StructConfig.SAFETY_FIRST)
 			if (len > this.cap - this.size)
 				throw new IllegalStateException();
 		int offset = this.size;
@@ -52,7 +53,7 @@ public class LineBlock {
 	}
 
 	public void addAll(LineBlock src) {
-		if (StructEnv.SAFETY_FIRST)
+		if (StructConfig.SAFETY_FIRST)
 			if (src.size > this.cap - this.size)
 				throw new IllegalStateException();
 		int offset = this.size;
@@ -62,7 +63,7 @@ public class LineBlock {
 
 	@TakeStruct
 	public Line get(int index) {
-		if (StructEnv.SAFETY_FIRST)
+		if (StructConfig.SAFETY_FIRST)
 			if (index < 0 || index >= size)
 				throw new IllegalStateException();
 		return Struct.index(base, Line.class, index);

@@ -9,7 +9,9 @@ import java.util.Random;
 
 import com.sun.management.GcInfo;
 import net.indiespot.struct.api.Struct;
-import net.indiespot.struct.api.TakeStruct;
+import net.indiespot.struct.api.annotations.TakeStruct;
+import net.indiespot.struct.api.runtime.StructAllocationStack;
+import net.indiespot.struct.api.runtime.StructGC;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.ARBFragmentShader;
 import org.lwjgl.opengl.ARBVertexShader;
@@ -70,25 +72,25 @@ public class Demo {
 		}
 
 		{
-			StructGC.addListener(new GcInfo() {
+			StructGC.addListener(new StructGC.GCListener() {
 
-				@Override
-				public void onStress() {
-					System.out.println("gc stress");
-				}
+                @Override
+                public void onStress() {
+                    System.out.println("gc stress");
+                }
 
-				@Override
-				public void onPanic() {
-					System.out.println("gc panic");
-				}
+                @Override
+                public void onPanic() {
+                    System.out.println("gc panic");
+                }
 
-				@Override
-				public void onGC(int freedHandles, int remainingHandles, int gcHeaps, int emptyHeaps, long tookNanos) {
-					synchronized (STRUCT_GC_DURATIONS) {
-						STRUCT_GC_DURATIONS.add(Long.valueOf(tookNanos / 1_000_000L));
-					}
-				}
-			});
+                @Override
+                public void onGC(int freedHandles, int remainingHandles, int gcHeaps, int emptyHeaps, long tookNanos) {
+                    synchronized (STRUCT_GC_DURATIONS) {
+                        STRUCT_GC_DURATIONS.add(Long.valueOf(tookNanos / 1_000_000L));
+                    }
+                }
+            });
 		}
 
 		final int quality = 8; // 1..8

@@ -1,15 +1,15 @@
-package net.indiespot.struct.runtime;
+package net.indiespot.struct.api.runtime;
 
 import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-import net.indiespot.struct.transform.StructEnv;
+import net.indiespot.struct.api.StructConfig;
 import sun.misc.Unsafe;
 
 /**
  * [INTERNAL USE ONLY]
- * 
+ *
  * @author Riven
  */
 @SuppressWarnings("restriction")
@@ -34,7 +34,7 @@ public class StructUnsafe {
 	static {
 		global = ByteBuffer.allocateDirect(4 * 1024);
 		global.order(ByteOrder.nativeOrder());
-		if (StructEnv.MEMORY_BASE_OFFSET) {
+		if (StructConfig.MEMORY_BASE_OFFSET) {
 			memory_base_offset_in_words = (getBufferBaseAddress(global) - (1024L * 1024L * 1024L)) >> 2;
 		} else {
 			memory_base_offset_in_words = 0L;

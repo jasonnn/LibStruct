@@ -1,9 +1,9 @@
-package net.indiespot.struct.runtime;
+package net.indiespot.struct.api.runtime;
 
 import java.nio.ByteBuffer;
 
-import net.indiespot.struct.runtime.StructGC.IntList;
-import net.indiespot.struct.transform.StructEnv;
+import net.indiespot.struct.api.StructConfig;
+import net.indiespot.struct.api.runtime.StructGC.IntList;
 
 public class StructHeap {
 
@@ -20,7 +20,7 @@ public class StructHeap {
 		this.buffer = buffer;
 		this.block = new StructAllocationBlock(handleOffset, buffer.remaining());
 
-		if (StructEnv.SAFETY_FIRST) {
+		if (StructConfig.SAFETY_FIRST) {
 			this.activeHandles = new IntList();
 		}
 	}
@@ -28,7 +28,7 @@ public class StructHeap {
 	public int malloc(int sizeof) {
 		if (block.canAllocate(sizeof)) {
 			int handle = block.allocate(sizeof);
-			if (StructEnv.SAFETY_FIRST) {
+			if (StructConfig.SAFETY_FIRST) {
 				if (activeHandles.contains(handle))
 					throw new IllegalStateException();
 				activeHandles.add(handle);
@@ -42,7 +42,7 @@ public class StructHeap {
 	public int malloc(int sizeof, int length) {
 		if (block.canAllocate(sizeof * length)) {
 			int offset = block.allocate(sizeof * length);
-			if (StructEnv.SAFETY_FIRST) {
+			if (StructConfig.SAFETY_FIRST) {
 				int words = StructMemory.bytes2words(sizeof);
 				for (int i = 0; i < length; i++) {
 					int handle = offset + i * words;
@@ -59,7 +59,7 @@ public class StructHeap {
 
 	public boolean freeHandle(int handle) {
 		if (this.isOnHeap(handle)) {
-			if (StructEnv.SAFETY_FIRST) {
+			if (StructConfig.SAFETY_FIRST) {
 				if (!activeHandles.removeValue(handle))
 					throw new IllegalStateException();
 			}
@@ -79,7 +79,7 @@ public class StructHeap {
 
 	public boolean isEmpty() {
 		boolean isEmpty = (allocCount == freeCount);
-		if (StructEnv.SAFETY_FIRST)
+		if (StructConfig.SAFETY_FIRST)
 			if (isEmpty != activeHandles.isEmpty())
 				throw new IllegalStateException();
 		return isEmpty;
@@ -87,7 +87,7 @@ public class StructHeap {
 
 	public int getHandleCount() {
 		int count = (allocCount - freeCount);
-		if (StructEnv.SAFETY_FIRST)
+		if (StructConfig.SAFETY_FIRST)
 			if (count != activeHandles.size())
 				throw new IllegalStateException();
 		return count;

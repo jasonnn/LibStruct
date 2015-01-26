@@ -2,7 +2,8 @@ package net.indiespot.struct.softlylit.structs.support;
 
 
 import net.indiespot.struct.api.Struct;
-import net.indiespot.struct.api.TakeStruct;
+import net.indiespot.struct.api.StructConfig;
+import net.indiespot.struct.api.annotations.TakeStruct;
 import net.indiespot.struct.softlylit.structs.Triangle;
 
 public class TriangleList {
@@ -30,10 +31,10 @@ public class TriangleList {
 	}
 
 	public void addRange(TriangleList list, int off, int len) {
-		if (StructEnv.SAFETY_FIRST)
+		if (StructConfig.SAFETY_FIRST)
 			if (len < 0)
 				throw new IllegalArgumentException();
-		if (StructEnv.SAFETY_FIRST)
+		if (StructConfig.SAFETY_FIRST)
 			if (off + len > list.size)
 				throw new IllegalArgumentException();
 		for (int i = 0; i < len; i++) {
@@ -49,7 +50,7 @@ public class TriangleList {
 
 	@TakeStruct
 	public Triangle get(int index) {
-		if (StructEnv.SAFETY_FIRST)
+		if (StructConfig.SAFETY_FIRST)
 			if (index < 0 || index >= size)
 				throw new ArrayIndexOutOfBoundsException(index);
 		return arr[index];
@@ -57,7 +58,7 @@ public class TriangleList {
 
 	@TakeStruct
 	public Triangle remove(int index) {
-		if (StructEnv.SAFETY_FIRST)
+		if (StructConfig.SAFETY_FIRST)
 			if (index < 0 || index >= size)
 				throw new ArrayIndexOutOfBoundsException(index);
 		Triangle got = arr[index];
@@ -67,7 +68,7 @@ public class TriangleList {
 
 	@TakeStruct
 	public Triangle removeMoveLast(int index) {
-		if (StructEnv.SAFETY_FIRST)
+		if (StructConfig.SAFETY_FIRST)
 			if (index < 0 || index >= size)
 				throw new ArrayIndexOutOfBoundsException(index);
 		Triangle got = arr[index];

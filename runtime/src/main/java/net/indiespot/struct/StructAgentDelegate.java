@@ -9,9 +9,9 @@ import java.lang.instrument.IllegalClassFormatException;
 import java.lang.instrument.Instrumentation;
 import java.security.ProtectionDomain;
 
-import net.indiespot.struct.api.ForceUninitializedMemory;
-import net.indiespot.struct.api.StructField;
-import net.indiespot.struct.api.StructType;
+import net.indiespot.struct.api.annotations.ForceUninitializedMemory;
+import net.indiespot.struct.api.annotations.StructField;
+import net.indiespot.struct.api.annotations.StructType;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
@@ -21,7 +21,8 @@ import org.objectweb.asm.Opcodes;
 
 
 import net.indiespot.struct.transform.StructEnv;
-
+//called reflectively from StructAgent
+@SuppressWarnings("unused")
 public class StructAgentDelegate implements AgentDelegate{
 
 	public void premain(String args, Instrumentation inst) {

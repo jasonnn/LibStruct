@@ -1,4 +1,4 @@
-package net.indiespot.struct.runtime;
+package net.indiespot.struct.api.runtime;
 
 public class StructAllocationStack extends StructAllocationBlock {
 	private final int[] stack = new int[100];

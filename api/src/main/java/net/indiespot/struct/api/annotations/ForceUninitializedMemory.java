@@ -1,9 +1,9 @@
-package net.indiespot.struct.api;
+package net.indiespot.struct.api.annotations;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.CLASS)
-public @interface CopyStruct {
+public @interface ForceUninitializedMemory {
 
 }

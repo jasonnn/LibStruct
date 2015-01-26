@@ -1,4 +1,6 @@
-package net.indiespot.struct.runtime;
+package net.indiespot.struct.api.runtime;
+
+import net.indiespot.struct.api.StructConfig;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -6,10 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import net.indiespot.struct.transform.StructEnv;
 
 public class StructMemory {
-	public static final boolean CHECK_SOURCECODE = StructEnv.SAFETY_FIRST || true;
+	public static final boolean CHECK_SOURCECODE = StructConfig.SAFETY_FIRST || true;
 
 	private static final boolean manually_fill_and_copy = true;
 
@@ -181,21 +182,21 @@ public class StructMemory {
 	}
 
 	public static int bytes2words(long sizeof) {
-		if (StructEnv.SAFETY_FIRST)
+		if (StructConfig.SAFETY_FIRST)
 			if (sizeof < 0 || (sizeof & 0x03) != 0x00)
 				throw new IllegalStateException();
-		if (StructEnv.SAFETY_FIRST)
+		if (StructConfig.SAFETY_FIRST)
 			if (sizeof > 0x2_FFFF_FFFFL)
 				throw new IllegalStateException();
 		int words = (int) (sizeof >> 2);
-		if (StructEnv.SAFETY_FIRST)
+		if (StructConfig.SAFETY_FIRST)
 			if (words < 0)
 				throw new IllegalStateException();
 		return words;
 	}
 
 	public static int bytes2words(int sizeof) {
-		if (StructEnv.SAFETY_FIRST)
+		if (StructConfig.SAFETY_FIRST)
 			if (sizeof < 0 || (sizeof & 0x03) != 0x00)
 				throw new IllegalStateException();
 		return sizeof >> 2;
@@ -203,22 +204,22 @@ public class StructMemory {
 
 	public static long handle2pointer(int handle) {
 		long pointer = (handle & 0xFFFF_FFFFL);
-		if (StructEnv.MEMORY_BASE_OFFSET)
+		if (StructConfig.MEMORY_BASE_OFFSET)
 			pointer += StructUnsafe.memory_base_offset_in_words;
 		return pointer << 2;
 	}
 
 	public static int pointer2handle(long pointer) {
-		if (StructEnv.SAFETY_FIRST)
+		if (StructConfig.SAFETY_FIRST)
 			if (pointer < 0L || (pointer & 3) != 0)
 				throw new IllegalStateException("pointer must be 32-bit aligned");
 		long handle = (pointer >> 2);
-		if (StructEnv.MEMORY_BASE_OFFSET)
+		if (StructConfig.MEMORY_BASE_OFFSET)
 			handle -= StructUnsafe.memory_base_offset_in_words;
-		if (StructEnv.SAFETY_FIRST)
+		if (StructConfig.SAFETY_FIRST)
 			if (handle < 0x0000_0000L)
 				throw new IllegalStateException("address [" + pointer + "] is negative due to base offset [" + StructUnsafe.memory_base_offset_in_words + "]");
-		if (StructEnv.SAFETY_FIRST)
+		if (StructConfig.SAFETY_FIRST)
 			if (handle > 0xFFFF_FFFFL)
 				throw new IllegalStateException("address [" + pointer + "] too big to fit in compressed pointer (addressable memory is 16 GB)");
 		return (int) handle;
@@ -234,7 +235,7 @@ public class StructMemory {
 	}
 
 	private static void checkHandle(int handle) {
-		if (StructEnv.SAFETY_FIRST) {
+		if (StructConfig.SAFETY_FIRST) {
 			if (handle == 0)
 				throw new NullPointerException("null struct");
 			StructAllocationStack stack = StructThreadLocalStack.getStack();

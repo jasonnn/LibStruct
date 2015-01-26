@@ -1,6 +1,6 @@
-package net.indiespot.struct.runtime;
+package net.indiespot.struct.api.runtime;
 
-import net.indiespot.struct.transform.StructEnv;
+import net.indiespot.struct.api.StructConfig;
 
 public class StructAllocationBlock {
 	final int wordSizeof;
@@ -18,11 +18,11 @@ public class StructAllocationBlock {
 	}
 
 	public int allocate(int sizeof) {
-		if(StructEnv.SAFETY_FIRST)
+		if(StructConfig.SAFETY_FIRST)
 			if(sizeof <= 0)
 				throw new IllegalArgumentException();
 
-		if(StructEnv.SAFETY_FIRST)
+		if(StructConfig.SAFETY_FIRST)
 			if(!this.canAllocate(sizeof))
 				throw new StructAllocationBlockOverflowError();
 
@@ -41,7 +41,7 @@ public class StructAllocationBlock {
 	}
 
 	private static int bytesToWords(int sizeof) {
-		if(StructEnv.SAFETY_FIRST)
+		if(StructConfig.SAFETY_FIRST)
 			if((sizeof & 3) != 0)
 				throw new RuntimeException();
 		return sizeof >> 2;

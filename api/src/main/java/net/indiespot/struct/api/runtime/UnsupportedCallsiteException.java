@@ -1,4 +1,4 @@
-package net.indiespot.struct.runtime;
+package net.indiespot.struct.api.runtime;
 
 public class UnsupportedCallsiteException extends IllegalStateException {
 

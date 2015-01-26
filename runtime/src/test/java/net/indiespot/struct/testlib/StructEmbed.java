@@ -1,7 +1,7 @@
 package net.indiespot.struct.testlib;
 
-import net.indiespot.struct.api.StructField;
-import net.indiespot.struct.api.StructType;
+import net.indiespot.struct.api.annotations.StructField;
+import net.indiespot.struct.api.annotations.StructType;
 
 /**
  * Created by jason on 1/24/15.

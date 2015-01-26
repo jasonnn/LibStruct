@@ -2,16 +2,25 @@ dependencies {
     compile project(':agent')
     compile project(':api')
     compile 'org.ow2.asm:asm-all:5.0.3'
+    compile group: 'org.openjdk.jol', name: 'jol-core', version: '1.0-SNAPSHOT'
 }
 //ignore warnings about Unsafe?
 compileJava.options.compilerArgs += '-XDignore.symbol.file'
 
 
+
+
 test {
+
+
     def rtJarTask = project(':agent').tasks.getByPath('jar')
     dependsOn rtJarTask
 
     def agentJar = rtJarTask.archivePath.absolutePath
 
     jvmArgs "-javaagent:$agentJar=struct-def.txt"//,'-DLibStruct.PRINT_LOG=true'
+    //TODO: fork per test? (for when the test causes vm crash)
+    maxParallelForks = 4
+    forkEvery = 1
+    //options.fork(forkMode)
 }

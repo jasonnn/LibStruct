@@ -2,7 +2,7 @@ package net.indiespot.struct.softlylit.structs;
 
 
 import net.indiespot.struct.api.Struct;
-import net.indiespot.struct.api.TakeStruct;
+import net.indiespot.struct.api.annotations.TakeStruct;
 
 public class Faller {
 	public Point origin = Struct.stackAlloc(Demo.STACK, Point.class);

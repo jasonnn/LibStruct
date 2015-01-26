@@ -1,4 +1,4 @@
-package net.indiespot.struct.runtime;
+package net.indiespot.struct.api.runtime;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -60,7 +60,7 @@ public class StructThreadLocalStack {
 			public void onThreadDeath(long threadId) {
 				ByteBuffer buffer = threadid2buffer[(int) threadId];
 				threadid2buffer[(int) threadId] = null;
-				
+
 				if (buffer != null) {
 					synchronized (buffer_mutex) {
 						discarded_buffers.add(buffer);
