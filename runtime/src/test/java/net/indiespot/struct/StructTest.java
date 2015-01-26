@@ -1,21 +1,16 @@
 package net.indiespot.struct;
 
-import java.nio.ByteBuffer;
-import java.util.Random;
-
-
-import net.indiespot.struct.api.*;
+import net.indiespot.struct.api.Struct;
 import net.indiespot.struct.api.annotations.CopyStruct;
 import net.indiespot.struct.api.annotations.TakeStruct;
-import net.indiespot.struct.api.runtime.IllegalStackAccessError;
-import net.indiespot.struct.api.runtime.StructGC;
-import net.indiespot.struct.api.runtime.StructMemory;
-import net.indiespot.struct.api.runtime.StructUnsafe;
-import net.indiespot.struct.api.runtime.SuspiciousFieldAssignmentError;
+import net.indiespot.struct.api.runtime.*;
 import net.indiespot.struct.testlib.*;
 import net.indiespot.struct.transform.StructEnv;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.nio.ByteBuffer;
+import java.util.Random;
 
 
 @SuppressWarnings("PointlessArithmeticExpression")
@@ -207,6 +202,7 @@ public class StructTest extends TestBase {
             // ae.iarr = new int[4]; // this will fail
         }
     }
+
     @Test
     public void testFromPointer() throws Exception {
         ByteBuffer bb = ByteBuffer.allocateDirect(234);
@@ -348,7 +344,6 @@ public class StructTest extends TestBase {
         Assert.assertEquals(arr[2], Struct.index(arr[1], Vec3.class, +1));
 
 
-
     }
 
     public static class TestIndex {
@@ -479,11 +474,11 @@ public class StructTest extends TestBase {
 
         Assert.assertNotEquals(0.0f, a.x);
         Assert.assertTrue(a.y != 0.0f);
-        Assert.assertTrue (a.z != 0.0f);
+        Assert.assertTrue(a.z != 0.0f);
 
-        Assert.assertTrue (b.x == 0.0f);
-        Assert.assertTrue (b.y == 0.0f);
-        Assert.assertTrue (b.z == 0.0f);
+        Assert.assertTrue(b.x == 0.0f);
+        Assert.assertTrue(b.y == 0.0f);
+        Assert.assertTrue(b.z == 0.0f);
 
         Struct.free(a);
         Struct.free(b);
