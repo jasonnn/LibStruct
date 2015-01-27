@@ -2,8 +2,7 @@ package net.indiespot.struct.api;
 
 
 public class StructConfig {
-    //TODO commented out to remove dependency on agent
-    //also, what was this for?
+
 //	static {
 //		String projectPackage = StructAgent.class.getPackage().getName();
 //		for (Object key : System.getProperties().keySet()) {
@@ -20,6 +19,8 @@ public class StructConfig {
         SAFETY_FIRST = StructConfig.parseVmArg(StructConfig.class, "SAFETY_FIRST", 0, false) != 0L;
         PRINT_LOG = StructConfig.parseVmArg(StructConfig.class, "PRINT_LOG", 0, false) != 0L;
         MEMORY_BASE_OFFSET = StructConfig.parseVmArg(StructConfig.class, "MEMORY_BASE_OFFSET", 0, false) != 0L;
+        DUMP = StructConfig.parseVmArg(StructConfig.class, "MEMORY_BASE_OFFSET", 0, false) != 0L;
+
     }
 
     private static final String magnitude_lookup_table = "KMGT"; // kilo, mega,
@@ -30,8 +31,9 @@ public class StructConfig {
     public static final boolean SAFETY_FIRST;
     public static final boolean PRINT_LOG;
     public static final boolean MEMORY_BASE_OFFSET;
+    public static final boolean DUMP;
 
-    public static final long parseVmArg(Class<?> type, String prop, long orElse, boolean asPOT) {
+    public static long parseVmArg(Class<?> type, String prop, long orElse, boolean asPOT) {
         String val = System.getProperty(type.getName() + '.' + prop);
         if (val == null)
             val = System.getProperty("LibStruct." + prop);

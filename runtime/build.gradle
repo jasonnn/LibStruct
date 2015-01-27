@@ -17,7 +17,10 @@ test {
 
     def agentJar = rtJarTask.archivePath.absolutePath
 
-    jvmArgs "-javaagent:$agentJar=struct-def.txt"//,'-DLibStruct.PRINT_LOG=true'
+    jvmArgs "-javaagent:$agentJar=struct-def.txt",
+            '-DLibStruct.PRINT_LOG=true'//,
+            //'-DLibStruct.SAFETY_FIRST=true',
+            //'-DLibStruct.MEMORY_BASE_OFFSET=true'
     maxParallelForks = 2
     forkEvery = 1
 
