@@ -1,8 +1,6 @@
 package net.indiespot.struct;
 
-import net.indiespot.struct.api.annotations.ForceUninitializedMemory;
-import net.indiespot.struct.api.annotations.StructField;
-import net.indiespot.struct.api.annotations.StructType;
+import net.indiespot.struct.transform.ASMConstants;
 import net.indiespot.struct.transform.StructEnv;
 import org.objectweb.asm.*;
 
@@ -44,6 +42,16 @@ public class StructAgentDelegate implements AgentDelegate {
                 if (className.startsWith("javax/"))
                     return null;
                 if (className.startsWith("sun/"))
+                    return null;
+                if (className.startsWith("com/sun"))
+                    return null;
+                if (className.startsWith("org/openjdk/jol"))
+                    return null;
+                if (className.startsWith("junit"))
+                    return null;
+                if (className.startsWith("org/junit"))
+                    return null;
+                if (className.startsWith("com/intellij"))
                     return null;
 
 
@@ -138,8 +146,8 @@ public class StructAgentDelegate implements AgentDelegate {
     private static StructInfo gatherStructInfo(final String fqcn, final InputStream bytecode) throws IOException {
         final StructInfo info = new StructInfo(fqcn);
 
-        ClassWriter writer = new ClassWriter(0);
-        ClassVisitor visitor = new ClassVisitor(Opcodes.ASM5, writer) {
+        //  ClassWriter writer = new ClassWriter(0);
+        ClassVisitor visitor = new ClassVisitor(Opcodes.ASM5) {
 
             @Override
             public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
@@ -151,7 +159,7 @@ public class StructAgentDelegate implements AgentDelegate {
             // find struct.sizeof
             @Override
             public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
-                if (desc.equals('L' + StructEnv.jvmClassName(StructType.class) + ';')) {
+                if (ASMConstants.STRUCT_TYPE.equals(desc)) {
                     return new AnnotationVisitor(Opcodes.ASM5, super.visitAnnotation(desc, visible)) {
                         @Override
                         public void visit(String name, Object value) {
@@ -161,7 +169,7 @@ public class StructAgentDelegate implements AgentDelegate {
                             super.visit(name, value);
                         }
                     };
-                } else if (desc.equals('L' + StructEnv.jvmClassName(ForceUninitializedMemory.class) + ';')) {
+                } else if (ASMConstants.FORCE_UNINITIALIZED_MEMORY.equals(desc)) {
                     return new AnnotationVisitor(Opcodes.ASM5, super.visitAnnotation(desc, visible)) {
                         @Override
                         public void visit(String name, Object value) {
@@ -180,7 +188,7 @@ public class StructAgentDelegate implements AgentDelegate {
                     return new FieldVisitor(Opcodes.ASM5, super.visitField(fieldAccess, fieldName, fieldDesc, signature, value)) {
                         @Override
                         public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
-                            if (desc.equals('L' + StructEnv.jvmClassName(StructField.class) + ';')) {
+                            if (ASMConstants.STRUCT_FIELD.equals(desc)) {
 
                                 return new AnnotationVisitor(Opcodes.ASM5, super.visitAnnotation(desc, visible)) {
                                     int offset = -1;
