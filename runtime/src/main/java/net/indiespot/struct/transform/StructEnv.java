@@ -3,7 +3,6 @@ package net.indiespot.struct.transform;
 import net.indiespot.struct.Struct;
 import net.indiespot.struct.StructInfo;
 import net.indiespot.struct.api.StructConfig;
-import net.indiespot.struct.api.annotations.*;
 import net.indiespot.struct.api.runtime.StructAllocationStack;
 import net.indiespot.struct.api.runtime.StructGC;
 import net.indiespot.struct.api.runtime.StructMemory;
@@ -28,11 +27,6 @@ public class StructEnv {
         public static final String PLAIN_STRUCT_FLAG = "$truct";
         public static final String ARRAY_WRAPPED_STRUCT_FLAG = "[L" + PLAIN_STRUCT_FLAG + ';';
         public static final String WRAPPED_STRUCT_FLAG = 'L' + PLAIN_STRUCT_FLAG + ';';
-        static final String COPY_STRUCT = Type.getDescriptor(CopyStruct.class);
-        static final String FORCE_UNINITIALIZED_MEMORY = Type.getDescriptor(ForceUninitializedMemory.class);
-        static final String STRUCT_FIELD = Type.getDescriptor(StructField.class);
-        static final String STRUCT_TYPE = Type.getDescriptor(StructType.class);
-        static final String TAKE_STRUCT = Type.getDescriptor(TakeStruct.class);
         static final String RENAMED_CONSTRUCTOR_NAME = "_<init>_";
     }
 
@@ -74,6 +68,7 @@ public class StructEnv {
         final Set<String> methodsWithStructAccess = new HashSet<>();
         final Set<String> methodsWithStructCreation = new HashSet<>();
         final Map<String, Integer> methodNameDesc2locals = new HashMap<>();
+        final Set<String> ignore = new HashSet<>();
 
         public boolean needsRewrite() {
             return !fieldsWithStructType.isEmpty() || !methodsWithStructAccess.isEmpty() || !methodsWithStructCreation.isEmpty();
@@ -103,7 +98,7 @@ public class StructEnv {
 
                 @Override
                 public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
-                    if (STRUCT_TYPE.equals(desc)) {
+                    if (ASMConstants.STRUCT_TYPE.equals(desc)) {
                         if (!plain_struct_types.contains(fqcn)) {
                             throw new IllegalStateException("encountered undefined struct: " + fqcn);
                         }
@@ -145,6 +140,15 @@ public class StructEnv {
                                     this.flagRewriteMethod(false);
                                 }
                             }
+                        }
+
+                        @Override
+                        public AnnotationVisitor visitAnnotation(String s, boolean b) {
+                            if (ASMConstants.SKIP_TRANSFORMATION.equals(s)) {
+                                this.flagIgnore();
+                                this.flagRewriteMethod(false);
+                            }
+                            return super.visitAnnotation(s, b);
                         }
 
                         @Override
@@ -209,13 +213,19 @@ public class StructEnv {
                             super.visitLdcInsn(cst);
                         }
 
+                        private void flagIgnore() {
+                            ignore.add(methodName + methodDesc);
+                        }
+
                         private void flagRewriteMethod(boolean forStructCreation) {
-                            if (methodsWithStructAccess.add(methodName + methodDesc))
+                            String id = (methodName + methodDesc);
+                            if (ignore.contains(id)) return;
+                            if (methodsWithStructAccess.add(id))
                                 if (PRINT_LOG)
                                     System.out.println("\t\tflagged for rewrite");
 
                             if (forStructCreation) {
-                                methodsWithStructCreation.add(methodName + methodDesc);
+                                methodsWithStructCreation.add(id);
                             }
                         }
 
@@ -444,11 +454,11 @@ public class StructEnv {
 
                     @Override
                     public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
-                        if (COPY_STRUCT.equals(desc)) {
+                        if (ASMConstants.COPY_STRUCT.equals(desc)) {
                             strategy = ReturnValueStrategy.COPY;
                             if (PRINT_LOG)
                                 System.out.println("\t\t\twith struct return value, with Copy strategy");
-                        } else if (TAKE_STRUCT.equals(desc)) {
+                        } else if (ASMConstants.TAKE_STRUCT.equals(desc)) {
                             strategy = ReturnValueStrategy.PASS;
                             if (PRINT_LOG)
                                 System.out.println("\t\t\twith struct return value, with Pass strategy");
