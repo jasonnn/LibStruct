@@ -2,17 +2,6 @@ dependencies {
     compile project(':agent')
     compile project(':api')
     compile 'org.ow2.asm:asm-all:5.0.3'
-    // testCompile group: 'org.openjdk.jol', name: 'jol-cli', version: '1.0-SNAPSHOT'
-    testCompile files('../lib/jol-cli.jar')
-}
-
-task runJol(type:JavaExec){
-    main 'org.openjdk.jol.Main'
-    classpath sourceSets.test.runtimeClasspath
-
-    args('internals','net.indiespot.struct.testlib.Vec3')
-    jvmArgs ["-javaagent:${file('../lib/jol-cli.jar').absolutePath}"]
-
 }
 
 
@@ -22,13 +11,11 @@ test {
     dependsOn rtJarTask
 
     def agentJar = rtJarTask.archivePath.absolutePath
-    def jolJar = file('../lib/jol-cli.jar').absolutePath
 
     jvmArgs "-javaagent:$agentJar=struct-def.txt",
-            "-javaagent:$jolJar",
     //'-DLibStruct.PRINT_LOG=true'//,
-    '-DLibStruct.SAFETY_FIRST=true'//,
-    //'-DLibStruct.MEMORY_BASE_OFFSET=true'
+    '-DLibStruct.SAFETY_FIRST=true',
+    '-DLibStruct.MEMORY_BASE_OFFSET=true'
 
     maxParallelForks = 2
     forkEvery = 1
