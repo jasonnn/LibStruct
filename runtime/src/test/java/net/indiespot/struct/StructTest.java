@@ -2,7 +2,8 @@ package net.indiespot.struct;
 
 import net.indiespot.struct.api.runtime.IllegalStackAccessError;
 import net.indiespot.struct.api.runtime.StructGC;
-import net.indiespot.struct.transform.StructEnv;
+import net.indiespot.struct.runtime.*;
+import net.indiespot.struct.transform.*;
 
 
 public class StructTest extends TestBase {

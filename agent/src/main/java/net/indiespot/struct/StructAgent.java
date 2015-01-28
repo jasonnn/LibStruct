@@ -9,11 +9,11 @@ public class StructAgent {
 
     public static void premain(String args, Instrumentation inst) {
         System.out.println("StructAgent: initiating...");
-
+        //TODO: allowing exceptions to propagate will cause the vm to exit,which is annoying when running tests
         try {
             invokeAgentDelegate(args, inst);
-        } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
-            e.printStackTrace();
+        } catch (Throwable t) {
+            t.printStackTrace();
         }
     }
 

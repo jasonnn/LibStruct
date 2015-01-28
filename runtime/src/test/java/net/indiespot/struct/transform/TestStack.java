@@ -1,4 +1,4 @@
-package net.indiespot.struct;
+package net.indiespot.struct.transform;
 
 import net.indiespot.struct.api.annotations.CopyStruct;
 import net.indiespot.struct.api.annotations.TakeStruct;

@@ -1,5 +1,6 @@
-package net.indiespot.struct;
+package net.indiespot.struct.runtime;
 
+import net.indiespot.struct.Struct;
 import net.indiespot.struct.api.annotations.TakeStruct;
 import net.indiespot.struct.api.runtime.StructGC;
 import net.indiespot.struct.testlib.Vec3;
@@ -95,7 +96,8 @@ public class TestMalloc {
         }
     }
 
-    public static void testBlockingQueueProducerConsumer() {
+    @Test
+    public void testBlockingQueueProducerConsumer() {
 
         int start = StructGC.getHandleCount();
         if (start != 0)

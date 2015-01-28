@@ -1,5 +1,6 @@
-package net.indiespot.struct;
+package net.indiespot.struct.runtime;
 
+import net.indiespot.struct.TheAgentD;
 import org.junit.Ignore;
 import org.junit.Test;
 
