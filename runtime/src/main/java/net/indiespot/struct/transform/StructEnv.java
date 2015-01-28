@@ -1082,8 +1082,7 @@ public class StructEnv {
                 sb.append("\t\t").append(entry.getKey()).append('\n');
                 if (!StructEnv.PRINT_LOG)
                     sb.append("\n\t\tfor more information set: -DLibStruct.PRINT_LOG=true");
-                System.err.println(sb.toString());
-                //throw new IllegalStateException(sb.toString());
+                throw new IllegalStateException(sb.toString());
             }
         }
 

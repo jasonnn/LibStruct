@@ -1,5 +1,6 @@
-package net.indiespot.struct;
+package net.indiespot.struct.transform;
 
+import net.indiespot.struct.testlib.Ship;
 import net.indiespot.struct.testlib.Vec3;
 import org.junit.Test;
 
@@ -10,6 +11,7 @@ public class TestNull {
     @Test
     public void runTest() throws Exception {
         test();
+        test2();
     }
 
     public static void test() {
@@ -29,4 +31,13 @@ public class TestNull {
     // private static void test(Vec3 nullStruct) {
     // System.out.println(nullStruct);
     // }
+
+
+    public static void test2() {
+        Ship ship = new Ship();
+        // ship = null;
+        // ship = Struct.typedNull(Ship.class);
+        ship.id = 0;
+        ship.pos = new Vec3();
+    }
 }

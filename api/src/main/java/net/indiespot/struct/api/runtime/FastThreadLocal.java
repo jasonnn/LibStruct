@@ -2,7 +2,7 @@ package net.indiespot.struct.api.runtime;
 
 public abstract class FastThreadLocal<T> {
     public static final int MAX_SUPPORTED_THREADS = 100_000;
-    //TODO investigate SuspiciousArrayCast
+    @SuppressWarnings("unchecked")
     private final T[] threadid2value = (T[]) new Object[MAX_SUPPORTED_THREADS];
 
     public int size() {

@@ -1,4 +1,4 @@
-package net.indiespot.struct;
+package net.indiespot.struct.transform;
 
 import org.junit.Test;
 
