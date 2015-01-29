@@ -1,5 +1,6 @@
-package net.indiespot.struct;
+package net.indiespot.struct.transform;
 
+import net.indiespot.struct.AbstractRuntimeTest;
 import net.indiespot.struct.testlib.Vec3;
 import org.junit.Test;
 
@@ -7,7 +8,7 @@ import org.junit.Test;
  * Created by jason on 1/25/15.
  */
 @SuppressWarnings("ConstantConditions")
-public class TransformTest {
+public class TransformTest extends AbstractRuntimeTest {
     @Test
     public void testOneInstance() throws Exception {
         new Vec3();

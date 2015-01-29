@@ -1,5 +1,6 @@
 package net.indiespot.struct.transform;
 
+import net.indiespot.struct.AbstractRuntimeTest;
 import net.indiespot.struct.api.annotations.CopyStruct;
 import net.indiespot.struct.api.annotations.TakeStruct;
 import net.indiespot.struct.testlib.Vec3;
@@ -8,13 +9,11 @@ import org.junit.Test;
 /**
  * Created by jason on 1/25/15.
  */
-public class TestStack {
-    @Test
-    public void runTest() throws Exception {
-        test();
-    }
+public class TestStack extends AbstractRuntimeTest {
 
-    public static void test() {
+
+    @Test
+    public void testCopyTakeSemantics() {
         Vec3 vec = new Vec3();
         vec.x = 1;
 

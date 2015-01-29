@@ -7,20 +7,11 @@ import org.junit.Test;
  * Created by jason on 1/25/15.
  */
 
-public class TestStructField {
-    @Test
-    public void runTest() throws Exception {
-        test();
-    }
-
-    public static void test() {
-        new TestStructField().testInstance();
-        TestStructField.testStatic();
-        TestStructField.testStatic2();
-    }
+public class TestStructField extends AbstractRuntimeTest {
 
     public Vec3 vec1;
 
+    @Test
     public void testInstance() {
         vec1 = Struct.calloc(Vec3.class);
         vec1.x = 43.21f;
@@ -34,7 +25,8 @@ public class TestStructField {
     public static Vec3 vec2;
     public static Vec3[] arr;
 
-    public static void testStatic() {
+    @Test
+    public void testStatic() {
         vec2 = Struct.calloc(Vec3.class);
 
         vec2.x = 12.34f;
@@ -46,7 +38,8 @@ public class TestStructField {
         arr = Struct.mallocArray(Vec3.class, 13);
     }
 
-    public static void testStatic2() {
+    @Test
+    public void testStatic2() {
         vec2.x = 4;
         Struct.free(vec2);
 

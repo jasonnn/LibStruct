@@ -8,13 +8,10 @@ import org.junit.Test;
  * Created by jason on 1/25/15.
  */
 @SuppressWarnings("MismatchedReadAndWriteOfArray")
-public class TestIndex {
-    @Test
-    public void runTest() throws Exception {
-        test();
-    }
+public class TestIndex extends AbstractRuntimeTest {
 
-    public static void test() {
+    @Test
+    public void test() {
         Vec3[] arr = new Vec3[123];
 
         arr[0].set(1.20f, 2.30f, 3.40f);

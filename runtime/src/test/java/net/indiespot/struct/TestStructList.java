@@ -6,13 +6,10 @@ import org.junit.Test;
 /**
  * Created by jason on 1/25/15.
  */
-public class TestStructList {
-    @Test
-    public void runTest() throws Exception {
-        test();
-    }
+public class TestStructList extends AbstractRuntimeTest {
 
-    public static void test() {
+    @Test
+    public void testStructList() {
         VecList list = new VecList(10);
         for (int i = 0; i < 100; i++)
             list.add(new Vec3());

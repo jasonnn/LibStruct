@@ -17,6 +17,10 @@ import java.security.ProtectionDomain;
 @SuppressWarnings("unused")
 public class StructAgentDelegate implements AgentDelegate {
 
+    public static void setExceptionHandler(Thread.UncaughtExceptionHandler handler) {
+        StructAgent.setUncaughtExceptionHandler(handler);
+    }
+
     @Override
     public void premain(String args, Instrumentation inst) {
         System.out.println("StructAgent: reading struct-defs from resource: '" + args + '\'');

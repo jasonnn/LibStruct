@@ -1,11 +1,13 @@
 package net.indiespot.struct;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
  * Created by jason on 1/25/15.
  */
-public class TestEmbeddedArrayUsage {
+@Ignore("nothing tested")
+public class TestEmbeddedArrayUsage extends AbstractRuntimeTest {
     @Test
     public void runTest() throws Exception {
         test();

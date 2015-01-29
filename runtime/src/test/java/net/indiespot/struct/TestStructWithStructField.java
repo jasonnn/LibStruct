@@ -7,13 +7,11 @@ import org.junit.Test;
 /**
  * Created by jason on 1/25/15.
  */
-public class TestStructWithStructField {
-    @Test
-    public void runTest() throws Exception {
-        test();
-    }
+public class TestStructWithStructField extends AbstractRuntimeTest {
 
-    public static void test() {
+
+    @Test
+    public void testSetFields() throws Exception {
         Ship ship = new Ship();
         assert (ship.id == 100001);
         ship.id++;
@@ -22,5 +20,8 @@ public class TestStructWithStructField {
 
         ship.pos = new Vec3();
         assert (ship.pos != null);
+
     }
+
+
 }

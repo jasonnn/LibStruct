@@ -2,6 +2,7 @@ package net.indiespot.struct;
 
 import net.indiespot.struct.testlib.NormalVec3;
 import net.indiespot.struct.testlib.Vec3;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Random;
@@ -9,7 +10,8 @@ import java.util.Random;
 /**
  * Created by jason on 1/25/15.
  */
-public class TestPerformance {
+@Ignore("benchmark")
+public class TestPerformance extends AbstractRuntimeTest {
     @Test
     public void runTest() throws Exception {
         test();

@@ -1,5 +1,6 @@
 package net.indiespot.struct.transform;
 
+import net.indiespot.struct.AbstractRuntimeTest;
 import net.indiespot.struct.testlib.Ship;
 import net.indiespot.struct.testlib.Vec3;
 import org.junit.Test;
@@ -7,14 +8,10 @@ import org.junit.Test;
 /**
  * Created by jason on 1/25/15.
  */
-public class TestNull {
-    @Test
-    public void runTest() throws Exception {
-        test();
-        test2();
-    }
+public class TestNull extends AbstractRuntimeTest {
 
-    public static void test() {
+    @Test
+    public void test() {
         new Vec3();
         Vec3 vec = null;
         vec = new Vec3();
@@ -32,8 +29,8 @@ public class TestNull {
     // System.out.println(nullStruct);
     // }
 
-
-    public static void test2() {
+    @Test
+    public void test2() {
         Ship ship = new Ship();
         // ship = null;
         // ship = Struct.typedNull(Ship.class);

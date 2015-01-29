@@ -7,13 +7,20 @@ import java.lang.reflect.InvocationTargetException;
 public class StructAgent {
     static final String AGENT_DELEGATE_FQN = "net.indiespot.struct.StructAgentDelegate";
 
+    private static volatile Thread.UncaughtExceptionHandler exceptionHandler = ExceptionHandlers.PRINT_STACK_TRACE;
+
+    public static void setUncaughtExceptionHandler(Thread.UncaughtExceptionHandler uncaughtExceptionHandler) {
+        exceptionHandler = uncaughtExceptionHandler;
+    }
+
     public static void premain(String args, Instrumentation inst) {
         System.out.println("StructAgent: initiating...");
-        //TODO: allowing exceptions to propagate will cause the vm to exit,which is annoying when running tests
+
+        //allowing exceptions to propagate will cause the vm to exit,which is annoying when running tests
         try {
             invokeAgentDelegate(args, inst);
         } catch (Throwable t) {
-            t.printStackTrace();
+            exceptionHandler.uncaughtException(Thread.currentThread(), t);
         }
     }
 

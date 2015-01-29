@@ -8,16 +8,12 @@ import org.junit.Test;
 /**
  * Created by jason on 1/25/15.
  */
-public class TestSuspiciousFieldAssignment {
-
-    @Test
-    public void runTest() throws Exception {
-        test();
-    }
+public class TestSuspiciousFieldAssignment extends AbstractRuntimeTest {
 
     public static Vec3 field;
 
-    public static void test() {
+    @Test
+    public void test() {
         try {
             field = new Vec3();
             assert false;
