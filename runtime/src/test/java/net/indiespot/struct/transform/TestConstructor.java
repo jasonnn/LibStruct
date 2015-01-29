@@ -1,19 +1,16 @@
 package net.indiespot.struct.transform;
 
+import net.indiespot.struct.AbstractRuntimeTest;
 import net.indiespot.struct.testlib.Vec3;
 import org.junit.Test;
 
 /**
  * Created by jason on 1/25/15.
  */
-public class TestConstructor {
+public class TestConstructor extends AbstractRuntimeTest {
 
     @Test
-    public void runTest() throws Exception {
-        test();
-    }
-
-    public static void test() {
+    public void test() {
         Vec3 v;
 
         v = new Vec3();

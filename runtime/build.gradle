@@ -8,23 +8,14 @@ ext {
     printLog = false
     safetyFirst = true
     memoryBaseOffset = false
+    structdefFile = 'struct-def.txt'
 }
 
+def agentJarTask = tasks.getByPath(':agent:jar')
+def agentJarPath = agentJarTask.archivePath.absolutePath
 
 test {
-
-    def rtJarTask = tasks.getByPath(':agent:jar')
-    dependsOn rtJarTask
-
-    def agentJar = rtJarTask.archivePath.absolutePath
-
-    maxParallelForks = Runtime.runtime.availableProcessors()
-    forkEvery = 1
-
-    jvmArgs "-javaagent:$agentJar=struct-def.txt",
-            "-DLibStruct.PRINT_LOG=$printLog",
-            "-DLibStruct.SAFETY_FIRST=$safetyFirst",
-            "-DLibStruct.MEMORY_BASE_OFFSET=$memoryBaseOffset"
-
+    dependsOn agentJarTask
+    jvmArgs "-javaagent:$agentJarPath=$structdefFile"
 
 }

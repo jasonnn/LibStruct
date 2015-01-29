@@ -1,5 +1,6 @@
 package net.indiespot.struct.transform;
 
+import net.indiespot.struct.AbstractRuntimeTest;
 import org.junit.Ignore;
 
 /**
@@ -7,7 +8,7 @@ import org.junit.Ignore;
  */
 @Ignore
 @SuppressWarnings("UnusedParameters")
-public class TestDuplicateOverloadedMethod {
+public class TestDuplicateOverloadedMethod extends AbstractRuntimeTest {
 
 //    @Test
 //    public void runTest() throws Exception {

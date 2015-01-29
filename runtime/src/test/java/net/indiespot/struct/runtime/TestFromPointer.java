@@ -1,5 +1,6 @@
 package net.indiespot.struct.runtime;
 
+import net.indiespot.struct.AbstractRuntimeTest;
 import net.indiespot.struct.Struct;
 import net.indiespot.struct.api.runtime.StructUnsafe;
 import net.indiespot.struct.testlib.Ship;
@@ -15,7 +16,7 @@ import java.nio.ByteBuffer;
  * Created by jason on 1/25/15.
  */
 @SuppressWarnings("PointlessArithmeticExpression")
-public class TestFromPointer {
+public class TestFromPointer extends AbstractRuntimeTest {
 
     @Test
     public  void sizeOfTest() {

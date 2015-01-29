@@ -1,5 +1,6 @@
 package net.indiespot.struct.runtime;
 
+import net.indiespot.struct.AbstractRuntimeTest;
 import net.indiespot.struct.Struct;
 import net.indiespot.struct.api.annotations.TakeStruct;
 import net.indiespot.struct.api.runtime.StructGC;
@@ -9,12 +10,8 @@ import org.junit.Test;
 /**
  * Created by jason on 1/25/15.
  */
-public class TestMalloc {
+public class TestMalloc extends AbstractRuntimeTest {
     @Test
-    public void runTest() throws Exception {
-        test();
-    }
-
     public static void test() {
         for (int i = 0; i < 4; i++) {
             Vec3 vec1 = Struct.malloc(Vec3.class);
