@@ -1,5 +1,6 @@
 package net.indiespot.struct.runtime;
 
+import net.indiespot.struct.AbstractRuntimeTest;
 import net.indiespot.struct.Struct;
 import net.indiespot.struct.testlib.Vec3;
 import org.junit.Test;
@@ -7,13 +8,11 @@ import org.junit.Test;
 /**
  * Created by jason on 1/25/15.
  */
-public class TestArray {
-    @Test
-    public void runTest() throws Exception {
-        test();
-    }
+@SuppressWarnings("ALL")
+public class TestArray extends AbstractRuntimeTest {
 
-    public static void test() {
+    @Test
+    public void test() {
         Vec3[] arr = new Vec3[10];
         arr[arr.length - 1].x = 4.5f;
         arr[arr.length - 1].set(5.6f, 6.7f, 7.8f);

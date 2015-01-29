@@ -1,21 +1,17 @@
 package net.indiespot.struct.transform;
 
+import net.indiespot.struct.AbstractRuntimeTest;
 import net.indiespot.struct.testlib.Vec3;
 import org.junit.Test;
 
 /**
  * Created by jason on 1/25/15.
  */
-@SuppressWarnings("UnnecessaryReturnStatement")
-public class TestIfFlow {
-    @Test
-    public void runTest() throws Exception {
-        test();
-        test2();
-        test3();
-    }
+@SuppressWarnings("ALL")
+public class TestIfFlow extends AbstractRuntimeTest {
 
-    public static void test() {
+    @Test
+    public void testEarlyReturn() {
         Vec3 vec = new Vec3();
 
         if (Math.random() < 0.5)
@@ -23,7 +19,8 @@ public class TestIfFlow {
         // System.out.println(v);
     }
 
-    public static void test2() {
+    @Test
+    public void testSimpleIfStmnt() {
         Vec3 vec = new Vec3();
 
         if (Math.random() < 0.5) {
@@ -32,7 +29,8 @@ public class TestIfFlow {
         return;
     }
 
-    public static void test3() {
+    @Test
+    public void testIfElse() {
         Vec3 vec = new Vec3();
 
         if (Math.random() < 0.5) {

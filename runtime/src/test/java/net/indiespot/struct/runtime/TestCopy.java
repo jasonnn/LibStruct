@@ -1,5 +1,6 @@
 package net.indiespot.struct.runtime;
 
+import net.indiespot.struct.AbstractRuntimeTest;
 import net.indiespot.struct.Struct;
 import net.indiespot.struct.testlib.Vec3;
 import org.junit.Test;
@@ -7,14 +8,11 @@ import org.junit.Test;
 /**
  * Created by jason on 1/25/15.
  */
-public class TestCopy {
+@SuppressWarnings("ALL")
+public class TestCopy extends AbstractRuntimeTest {
 
     @Test
-    public void runTest() throws Exception {
-        test();
-    }
-
-    public static void test() {
+    public void test() {
         Vec3 a = Struct.malloc(Vec3.class);
         a.x = 12.34f;
         a.y = 23.45f;

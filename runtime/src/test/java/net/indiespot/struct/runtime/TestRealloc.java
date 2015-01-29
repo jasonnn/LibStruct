@@ -1,5 +1,6 @@
 package net.indiespot.struct.runtime;
 
+import net.indiespot.struct.AbstractRuntimeTest;
 import net.indiespot.struct.Struct;
 import net.indiespot.struct.testlib.Vec3;
 import org.junit.Test;
@@ -7,13 +8,9 @@ import org.junit.Test;
 /**
  * Created by jason on 1/25/15.
  */
-public class TestRealloc {
+public class TestRealloc extends AbstractRuntimeTest {
 
     @Test
-    public void runTest() throws Exception {
-        test();
-    }
-
     public void test() {
         Vec3[] arr = Struct.mallocArray(Vec3.class, 13);
         assert arr.length == 13;

@@ -1,5 +1,6 @@
 package net.indiespot.struct.runtime;
 
+import net.indiespot.struct.AbstractRuntimeTest;
 import net.indiespot.struct.GCListenerRule;
 import net.indiespot.struct.Struct;
 import net.indiespot.struct.testlib.Vec3;
@@ -13,9 +14,9 @@ import java.util.logging.Logger;
 /**
  * Created by jason on 1/24/15.
  */
-@SuppressWarnings({"PointlessArithmeticExpression", "ConstantConditions"})
+@SuppressWarnings("ALL")
 @Ignore("slow")
-public class TestLargeAlloc {
+public class TestLargeAlloc extends AbstractRuntimeTest {
     private static final Logger log = Logger.getLogger(TestLargeAlloc.class.getName());
 
     @ClassRule
