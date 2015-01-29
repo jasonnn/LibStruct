@@ -10,7 +10,7 @@ import org.junit.rules.Timeout;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 
-public class ThreadMonitorTest {
+public class ThreadMonitorTest extends AbstractRuntimeTest {
     @Rule
     public TestRule timeout = new Timeout(10000);
 

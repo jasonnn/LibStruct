@@ -7,13 +7,10 @@ import org.junit.Test;
 /**
  * Created by jason on 1/25/15.
  */
-public class TestSwap {
-    @Test
-    public void runTest() throws Exception {
-        test();
-    }
+public class TestSwap extends AbstractRuntimeTest {
 
-    public static void test() {
+    @Test
+    public void test() {
         Vec3 a = new Vec3(1.20f, 2.30f, 3.40f);
         Vec3 b = new Vec3(1.02f, 2.03f, 3.04f);
 

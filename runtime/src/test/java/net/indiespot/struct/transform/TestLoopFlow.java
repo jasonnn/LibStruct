@@ -1,23 +1,17 @@
 package net.indiespot.struct.transform;
 
+import net.indiespot.struct.AbstractRuntimeTest;
 import net.indiespot.struct.testlib.Vec3;
 import org.junit.Test;
 
 /**
  * Created by jason on 1/25/15.
  */
-public class TestLoopFlow {
-    @Test
-    public void runTest() throws Exception {
-        test();
-        test2();
-        test3();
-        test4();
-        test5();
-        test6();
-    }
+@SuppressWarnings("StatementWithEmptyBody")
+public class TestLoopFlow extends AbstractRuntimeTest {
 
-    public static void test() {
+    @Test
+    public void testFori() {
         Vec3 vec = new Vec3();
         for (int i = 0; i < 3; i++) {
             // System.out.println(v);
@@ -25,7 +19,8 @@ public class TestLoopFlow {
         // System.out.println(v);
     }
 
-    public static void test2() {
+    @Test
+    public void testWhile() {
         Vec3 vec = new Vec3();
         while (Math.random() < 0.5) {
             // System.out.println(v);
@@ -33,7 +28,8 @@ public class TestLoopFlow {
         // System.out.println(v);
     }
 
-    public static void test3() {
+    @Test
+    public void testDoWhile() {
         Vec3 vec = new Vec3();
         do {
             // System.out.println(v);
@@ -41,19 +37,22 @@ public class TestLoopFlow {
         // System.out.println(v);
     }
 
-    public static void test4() {
+    @Test
+    public void testFori_2() {
         for (int i = 0; i < 3; i++) {
             // System.out.println(v);
         }
     }
 
-    public static void test5() {
+    @Test
+    public void testWhile_2() {
         while (Math.random() < 0.5) {
             // System.out.println(v);
         }
     }
 
-    public static void test6() {
+    @Test
+    public void testDoWhile_2() {
         do {
             // System.out.println(v);
         } while (Math.random() < 0.5);

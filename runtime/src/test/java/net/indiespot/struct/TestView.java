@@ -8,14 +8,11 @@ import org.junit.Test;
 /**
  * Created by jason on 1/25/15.
  */
-public class TestView {
+public class TestView extends AbstractRuntimeTest {
+
 
     @Test
-    public void runTest() throws Exception {
-        test();
-    }
-
-    public static void test() {
+    public void test() {
         PosVelRef ref = new PosVelRef();
         ref.pos = new Vec3();
         ref.vel = new Vec3();

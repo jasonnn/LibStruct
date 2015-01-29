@@ -6,13 +6,9 @@ import org.junit.Test;
 /**
  * Created by jason on 1/25/15.
  */
-public class TestSum {
+public class TestSum extends AbstractRuntimeTest {
     @Test
-    public void runTest() throws Exception {
-        test();
-    }
-
-    public static void test() {
+    public void testSum() {
         Vec3 vec1 = new Vec3();
         vec1.x = 13.34f;
         vec1.y = 14.46f;

@@ -22,27 +22,27 @@ public class GCListenerRule extends TestWatcher implements StructGC.GCListener {
     protected void finished(Description description) {
         StructGC.removeListener(this);
         super.finished(description);
-        log.info("awaiting gc...");
+        log.fine("awaiting gc...");
         while (StructGC.getHandleCount() != 0) {
             Thread.yield();
         }
 
-        log.info("done");
+        log.fine("done");
     }
 
     @Override
     public void onGC(int freedHandles, int remainingHandles, int gcHeaps, int emptyHeaps, long tookNanos) {
-        log.info("LibStruct GC: freed=" + freedHandles / 1024 + "K, remaining=" + remainingHandles / 1024 + "K, took: " + tookNanos / 1000 / 1000 + "ms");
+        log.fine("LibStruct GC: freed=" + freedHandles / 1024 + "K, remaining=" + remainingHandles / 1024 + "K, took: " + tookNanos / 1000 / 1000 + "ms");
     }
 
     @Override
     public void onStress() {
-        log.info("LibStruct GC: stress!");
+        log.warning("LibStruct GC: stress!");
     }
 
     @Override
     public void onPanic() {
-        log.info("LibStruct GC: panic!");
+        log.warning("LibStruct GC: panic!");
 
     }
 }

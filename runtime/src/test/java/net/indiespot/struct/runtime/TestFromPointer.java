@@ -4,11 +4,8 @@ import net.indiespot.struct.Struct;
 import net.indiespot.struct.api.runtime.StructUnsafe;
 import net.indiespot.struct.testlib.Ship;
 import net.indiespot.struct.testlib.Vec3;
-import net.indiespot.struct.transform.SkipTransformation;
 import org.junit.Assert;
 import org.junit.Test;
-import org.openjdk.jol.info.ClassLayout;
-import org.openjdk.jol.util.VMSupport;
 import sun.nio.ch.DirectBuffer;
 
 import java.nio.ByteBuffer;
@@ -29,33 +26,7 @@ public class TestFromPointer {
         assert (sizeofShip == 8);
     }
 
-    @SkipTransformation
-    @Test
-    public void testJOL() throws Exception {
-        System.err.println(VMSupport.vmDetails());
-        System.err.println(ClassLayout.parseClass(Vec3.class).toPrintable());
-        /*
 
-        Running 64-bit HotSpot VM.
-Using compressed oop with 3-bit shift.
-Using compressed klass with 3-bit shift.
-Objects are 8 bytes aligned.
-Field sizes by type: 4, 1, 1, 2, 2, 4, 4, 8, 8 [bytes]
-Array element sizes: 4, 1, 1, 2, 2, 4, 4, 8, 8 [bytes]
-
- net.indiespot.struct.testlib.Vec3 object internals:
- OFFSET  SIZE  TYPE DESCRIPTION                    VALUE
-      0     4       (object header)                01 00 00 00 (0000 0001 0000 0000 0000 0000 0000 0000)
-      4     4       (object header)                00 00 00 00 (0000 0000 0000 0000 0000 0000 0000 0000)
-      8     4       (object header)                32 ca 00 f8 (0011 0010 1100 1010 0000 0000 1111 1000)
-     12     4 float Vec3.x                         0.0
-     16     4 float Vec3.y                         0.0
-     20     4 float Vec3.z                         0.0
-Instance size: 24 bytes (reported by Instrumentation API)
-Space losses: 0 bytes internal + 0 bytes external = 0 bytes total
-         */
-
-    }
 
     @Test
     public void testFromPointer() {

@@ -1,5 +1,6 @@
 package net.indiespot.struct.transform;
 
+import net.indiespot.struct.AbstractRuntimeTest;
 import net.indiespot.struct.testlib.Vec3;
 import org.junit.Test;
 
@@ -7,13 +8,10 @@ import org.junit.Test;
  * Created by jason on 1/25/15.
  */
 
-public class TestMethodPass {
-    @Test
-    public void runTest() throws Exception {
-        test();
-    }
+public class TestMethodPass extends AbstractRuntimeTest {
 
-    public static void test() {
+    @Test
+    public void test() {
         Vec3 vec = new Vec3();
         vec.x = 3.34f;
         vec.y = 4.46f;

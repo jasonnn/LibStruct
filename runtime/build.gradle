@@ -4,20 +4,27 @@ dependencies {
     compile 'org.ow2.asm:asm-all:5.0.3'
 }
 
+ext {
+    printLog = false
+    safetyFirst = true
+    memoryBaseOffset = false
+}
+
 
 test {
 
-    def rtJarTask = project(':agent').tasks.getByPath('jar')
+    def rtJarTask = tasks.getByPath(':agent:jar')
     dependsOn rtJarTask
 
     def agentJar = rtJarTask.archivePath.absolutePath
 
-    jvmArgs "-javaagent:$agentJar=struct-def.txt",
-    //'-DLibStruct.PRINT_LOG=true'//,
-    '-DLibStruct.SAFETY_FIRST=true',
-    '-DLibStruct.MEMORY_BASE_OFFSET=true'
-
-    maxParallelForks = 2
+    maxParallelForks = Runtime.runtime.availableProcessors()
     forkEvery = 1
+
+    jvmArgs "-javaagent:$agentJar=struct-def.txt",
+            "-DLibStruct.PRINT_LOG=$printLog",
+            "-DLibStruct.SAFETY_FIRST=$safetyFirst",
+            "-DLibStruct.MEMORY_BASE_OFFSET=$memoryBaseOffset"
+
 
 }

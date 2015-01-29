@@ -1,53 +1,37 @@
 package net.indiespot.struct;
 
 import net.indiespot.struct.testlib.Vec3;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
  * Created by jason on 1/24/15.
  */
 @SuppressWarnings("PointlessBooleanExpression")
-public class TestStructEnv extends TestBase {
+public class TestStructEnv extends AbstractRuntimeTest {
 
 
-    public static void test() {
-        new TestStructEnv().testAll();
-    }
-
-    public void testAll() {
-        test0();
-        test1();
-        test2();
-        test3();
-        test4();
-    }
-
-    @Test
-    public void test0() {
-        try {
+    @Test(expected = AssertionError.class)
+    public void makeSureAssertionsAreEnabled() {
             assert false;
-
-            throw new IllegalStateException("asserts must be enabled");
-        } catch (AssertionError err) {
-            System.out.println("StructTest: asserts are enabled.");
-        }
     }
 
     @Test
-    public void test1() {
+    public void testNullReachability() {
         assert Struct.isReachable(null) == false;
     }
 
     @Test
-    public void test2() {
+    public void testStructReachability() {
         assert Struct.isReachable(new Vec3()) == true;
     }
 
     @Test
-    public void test3() {
+    public void testPointerIsProbablyValid() {
         assert Struct.getPointer(new Vec3()) > 0L;
     }
 
+    @Ignore("nothing tested")
     @Test
     public void test4() {
         Class<?> typ1 = String.class;

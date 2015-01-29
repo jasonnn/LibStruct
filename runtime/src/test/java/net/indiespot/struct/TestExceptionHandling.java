@@ -6,7 +6,7 @@ import org.junit.Test;
 /**
  * Created by jason on 1/25/15.
  */
-public class TestTryFinally {
+public class TestExceptionHandling extends AbstractRuntimeTest {
     @Test
     public void runTest() throws Exception {
         test();
